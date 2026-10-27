@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="theme-color" content="#F2F2F7">
-  <title>Medications - Health</title>
+  <meta name="theme-color" content="#F4F5F9">
+  <title>Medications - Health & Reminder</title>
 
-  <!-- Google Fonts & Material Symbols Rounded -->
+  <!-- Google Font: Gabarito & Material Symbols Rounded -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
   <!-- Tailwind CSS CDN -->
@@ -22,7 +22,7 @@
         extend: {
           colors: {
             ios: {
-              bg: '#F2F2F7',
+              bg: '#F4F5F9',
               card: '#FFFFFF',
               blue: '#007AFF',
               cyan: '#00C7BE',
@@ -31,355 +31,423 @@
               yellow: '#FFCC00',
               orange: '#FF9500',
               purple: '#AF52DE',
-              border: '#E5E5EA',
-              muted: '#8E8E93',
+              border: '#E5E7EB',
+              muted: '#6B7280',
             }
           },
           fontFamily: {
-            sans: ['-apple-system', 'BlinkMacSystemFont', '"Plus Jakarta Sans"', '"SF Pro Text"', 'system-ui', 'sans-serif'],
+            sans: ['"Gabarito"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
           }
         }
       }
     }
   </script>
 
-  <!-- Custom App Styles -->
+  <!-- Custom Styles -->
   <link rel="stylesheet" href="css/styles.css">
   <link rel="manifest" href="manifest.json">
 </head>
-<body class="bg-slate-950 flex flex-col items-center justify-center min-h-screen p-0 sm:p-4 select-none">
+<body class="bg-[#F4F5F9] text-gray-900 min-h-screen flex flex-col">
 
-  <!-- Desktop Floating Control Bar (Device Mode Toggle & Test Button) -->
-  <aside aria-label="Desktop Controls" class="fixed top-4 right-4 z-50 flex items-center space-x-2 hidden sm:flex">
-    <button id="view-mode-toggle" onclick="toggleDeviceFrame()" class="px-4 py-2 rounded-full bg-slate-900/90 text-white hover:bg-slate-800 border border-slate-700 backdrop-blur-md text-xs font-semibold shadow-lg flex items-center transition-all">
-      <span class="material-symbols-rounded text-base mr-1.5">fullscreen</span> Full Screen
-    </button>
-    <button onclick="openAddMedicationModal()" class="px-4 py-2 rounded-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg flex items-center transition-all">
-      <span class="material-symbols-rounded text-base mr-1">add</span> New Med
-    </button>
-  </aside>
-
-  <!-- iPhone Shell Container -->
-  <div id="device-container" class="w-full max-w-[420px] h-[860px] bg-[#F2F2F7] rounded-[52px] shadow-[0_25px_70px_rgba(0,0,0,0.6),0_0_0_12px_#27272a,0_0_0_15px_#3f3f46] relative overflow-hidden flex flex-col border-[6px] border-black transition-all">
-    
-    <!-- iPhone Speaker Ear Piece & Dynamic Island -->
-    <div id="notch-bezel" class="absolute top-0 left-0 w-full z-40 flex flex-col items-center pt-2.5 pointer-events-none">
-      <div id="dynamic-island-pill" class="dynamic-island w-28 h-7 bg-black rounded-full flex items-center justify-between px-2 text-white pointer-events-auto cursor-pointer shadow-md transition-all">
-        <span id="dynamic-island-icon" class="material-symbols-rounded text-cyan-400 text-base">pill</span>
-        <div id="dynamic-island-text" class="text-xs truncate max-w-[190px]"></div>
-        <div class="w-2.5 h-2.5 rounded-full bg-zinc-800 flex items-center justify-center">
-          <div class="w-1.5 h-1.5 rounded-full bg-blue-900/70"></div>
+  <!-- ================= TOP APP HEADER (RESPONSIVE WEB NAVBAR) ================= -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-200/80 shadow-xs">
+    <div class="app-max-width px-4 sm:px-6 py-3 flex items-center justify-between">
+      
+      <!-- Logo / Title -->
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('browse_meds')">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white flex items-center justify-center shadow-md">
+          <span class="material-symbols-rounded text-2xl font-bold">medication</span>
+        </div>
+        <div>
+          <span class="text-xl sm:text-2xl font-black tracking-tight text-gray-900 leading-none block">Medications</span>
+          <span class="text-xs font-bold text-gray-400 leading-none">Apple Health & Reminder</span>
         </div>
       </div>
-    </div>
 
-    <!-- iOS Native Status Bar -->
-    <header class="w-full px-7 pt-3.5 pb-1 flex justify-between items-center text-xs font-bold text-gray-900 z-30 select-none">
-      <span id="status-bar-time" class="tracking-tight text-sm">9:41</span>
-      <div class="flex items-center space-x-1.5 text-gray-900">
-        <span class="material-symbols-rounded text-sm">signal_cellular_alt</span>
-        <span class="material-symbols-rounded text-sm">wifi</span>
-        <span class="material-symbols-rounded text-lg">battery_full</span>
+      <!-- Desktop Navigation Tabs (Hidden on mobile) -->
+      <nav aria-label="Desktop Main Navigation" class="hidden md:flex items-center space-x-1 bg-gray-100 p-1.5 rounded-2xl">
+        <button id="dtab-btn-browse_meds" onclick="switchTab('browse_meds')" class="px-4 py-2 rounded-xl text-sm font-black transition-all bg-white text-blue-600 shadow-xs">
+          Schedule & Cabinet
+        </button>
+        <button id="dtab-btn-summary" onclick="switchTab('summary')" class="px-4 py-2 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-200/60 transition-all">
+          Weekly Report & Stats
+        </button>
+        <button id="dtab-btn-sharing" onclick="switchTab('sharing')" class="px-4 py-2 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-200/60 transition-all">
+          Medical Sharing
+        </button>
+      </nav>
+
+      <!-- Primary Action Buttons -->
+      <div class="flex items-center space-x-2">
+        <button onclick="openAddMedicationModal()" class="px-4 sm:px-5 py-2.5 rounded-2xl bg-blue-500 hover:bg-blue-600 text-white font-black text-sm shadow-md hover:shadow-lg flex items-center space-x-1.5 transition-all active:scale-95">
+          <span class="material-symbols-rounded text-xl font-bold">add</span>
+          <span class="hidden sm:inline">Add Medication</span>
+        </button>
       </div>
-    </header>
 
-    <!-- Main Scrollable App Viewport -->
-    <main id="app-viewport" class="flex-1 overflow-y-auto no-scrollbar pb-24 relative bg-[#F2F2F7]">
+    </div>
+  </header>
+
+  <!-- ================= MAIN APP VIEWPORT ================= -->
+  <main class="flex-1 app-max-width w-full px-4 sm:px-6 py-6 pb-28 md:pb-12">
+    
+    <!-- ================= VIEW 1: BROWSE / SCHEDULE (Default) ================= -->
+    <div id="view-browse_meds" class="space-y-6">
       
-      <!-- ================= TAB 1: BROWSE / SCHEDULE (Default View) ================= -->
-      <section id="view-browse_meds" class="min-h-full">
-        <!-- Top App Navigation Bar -->
-        <div class="px-5 pt-1 pb-2 flex items-center justify-between sticky top-0 bg-[#F2F2F7]/95 backdrop-blur-md z-20">
-          <button onclick="navigateWeek(-1)" class="w-9 h-9 rounded-full bg-white shadow-xs flex items-center justify-center text-gray-700 hover:bg-gray-50 active:scale-95 transition-all">
-            <span class="material-symbols-rounded text-xl">chevron_left</span>
+      <!-- Date Bar Navigator (Apple Health Style) -->
+      <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-xs border border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+        
+        <!-- Day Navigation (< Today >) -->
+        <div class="flex items-center space-x-2">
+          <button onclick="navigateDay(-1)" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition-all active:scale-95" title="Previous Day">
+            <span class="material-symbols-rounded text-2xl">chevron_left</span>
           </button>
           
-          <h1 class="text-base font-bold text-gray-900 tracking-tight">Medications</h1>
+          <div class="relative">
+            <button onclick="document.getElementById('hidden-date-input').showPicker ? document.getElementById('hidden-date-input').showPicker() : document.getElementById('hidden-date-input').focus()" 
+              class="px-4 py-2 rounded-2xl bg-gray-50 hover:bg-gray-100 border border-gray-200/80 flex items-center space-x-2 transition-all">
+              <span id="header-date-title" class="text-lg sm:text-xl font-black text-gray-900 tracking-tight">Today, October 27</span>
+              <span class="material-symbols-rounded text-xl text-gray-500">arrow_drop_down</span>
+            </button>
+            <input type="date" id="hidden-date-input" onchange="onDatePicked(this.value)" class="absolute opacity-0 pointer-events-none w-0 h-0" />
+          </div>
 
-          <button onclick="openAddMedicationModal()" class="w-9 h-9 rounded-full bg-white shadow-xs flex items-center justify-center text-blue-600 hover:bg-gray-50 active:scale-95 transition-all">
-            <span class="material-symbols-rounded text-2xl font-bold">add</span>
+          <button onclick="navigateDay(1)" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition-all active:scale-95" title="Next Day">
+            <span class="material-symbols-rounded text-2xl">chevron_right</span>
           </button>
         </div>
 
-        <!-- Date Header & Dropdown ("Today, April 1" with downward caret) -->
-        <div class="px-5 pt-1 pb-3 text-center relative">
-          <button onclick="document.getElementById('date-picker-hidden').showPicker ? document.getElementById('date-picker-hidden').showPicker() : document.getElementById('date-picker-hidden').focus()" class="inline-flex items-center space-x-1.5 text-lg font-extrabold text-gray-900 tracking-tight cursor-pointer hover:opacity-80 transition-opacity">
-            <span id="header-date-title">Today, April 1</span>
-            <span class="material-symbols-rounded text-sm text-gray-500">arrow_drop_down</span>
-          </button>
-          <input type="date" id="date-picker-hidden" onchange="onDatePicked(this.value)" class="absolute opacity-0 pointer-events-none w-0 h-0" />
-        </div>
-
-        <!-- Week Calendar Strip (S M T W T F S with adherence rings) -->
-        <div class="px-3 pb-4">
-          <div id="week-calendar-strip" class="flex items-center justify-between bg-white rounded-2xl py-3 px-2 shadow-xs border border-gray-100/70">
-            <!-- Dynamically populated by JS -->
-          </div>
-        </div>
-
-        <!-- Section: "Log" (Upcoming / Untaken Doses) -->
-        <div class="px-5 mb-5">
-          <h2 class="text-xl font-extrabold text-gray-900 tracking-tight mb-2.5">Log</h2>
-          <div id="log-upcoming-section">
-            <!-- Dynamically populated (e.g. 12:00 PM Calcium + As Needed row) -->
-          </div>
-        </div>
-
-        <!-- Section: "Logged" (Recorded Doses) -->
-        <div id="logged-section" class="px-5 mb-5" style="display: none;">
-          <h2 class="text-xl font-extrabold text-gray-900 tracking-tight mb-2.5">Logged</h2>
-          <div id="logged-list">
-            <!-- Dynamically populated -->
-          </div>
-        </div>
-
-        <!-- Section: "Your Medications" -->
-        <div class="px-5 mb-6">
-          <div class="flex items-center justify-between mb-2.5">
-            <h2 class="text-xl font-extrabold text-gray-900 tracking-tight">Your Medications</h2>
-            <button onclick="openAddMedicationModal()" class="text-sm font-semibold text-blue-600 hover:text-blue-700 active:opacity-70">Edit</button>
-          </div>
-          <div id="your-meds-list">
-            <!-- Dynamically populated with all medications -->
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= TAB 2: SUMMARY (Adherence & Stats) ================= -->
-      <section id="view-summary" class="min-h-full px-5 pt-3 pb-8 hidden">
-        <h1 class="text-2xl font-black text-gray-900 tracking-tight mb-1">Health Summary</h1>
-        <p class="text-xs text-gray-500 font-medium mb-4">Adherence trends & cabinet analytics</p>
-        <div id="summary-stats-content">
-          <!-- Dynamically populated by renderSummaryStats() -->
-        </div>
-      </section>
-
-      <!-- ================= TAB 3: SHARING (Medical ID & Export) ================= -->
-      <section id="view-sharing" class="min-h-full px-5 pt-3 pb-8 hidden">
-        <h1 class="text-2xl font-black text-gray-900 tracking-tight mb-1">Medical Sharing</h1>
-        <p class="text-xs text-gray-500 font-medium mb-4">Provider report & emergency details</p>
-        <div id="sharing-view-content">
-          <!-- Dynamically populated by renderSharingView() -->
-        </div>
-      </section>
-
-    </main>
-
-    <!-- Apple iOS Floating Frosted Glass Tab Bar -->
-    <nav aria-label="Bottom Navigation" class="absolute bottom-5 left-1/2 transform -translate-x-1/2 z-30 w-[88%] max-w-[340px]">
-      <div class="ios-glass rounded-full px-5 py-2 flex items-center justify-around shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/60">
-        
-        <!-- Summary Tab -->
-        <button id="tab-btn-summary" onclick="switchTab('summary')" class="flex flex-col items-center text-gray-400 hover:text-blue-600 transition-all ios-touch py-0.5">
-          <span class="material-symbols-rounded text-[22px]">favorite</span>
-          <span class="text-[10px] font-semibold mt-0.5">Summary</span>
+        <button onclick="selectDate(new Date().toISOString())" class="px-4 py-2 rounded-full bg-sky-50 text-blue-600 hover:bg-sky-100 font-bold text-sm transition-all">
+          Jump to Today
         </button>
-
-        <!-- Sharing Tab -->
-        <button id="tab-btn-sharing" onclick="switchTab('sharing')" class="flex flex-col items-center text-gray-400 hover:text-blue-600 transition-all ios-touch py-0.5">
-          <span class="material-symbols-rounded text-[22px]">group</span>
-          <span class="text-[10px] font-semibold mt-0.5">Sharing</span>
-        </button>
-
-        <!-- Browse / Medications Tab (Active by default) -->
-        <button id="tab-btn-browse_meds" onclick="switchTab('browse_meds')" class="flex flex-col items-center text-blue-600 font-bold hover:text-blue-700 transition-all ios-touch py-0.5">
-          <span class="material-symbols-rounded text-[22px]">apps</span>
-          <span class="text-[10px] font-semibold mt-0.5">Browse</span>
-        </button>
-
       </div>
-    </nav>
 
-    <!-- iOS Home Indicator bar -->
-    <div class="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-black/40 rounded-full z-40 pointer-events-none"></div>
-
-    <!-- ================= MODALS & BOTTOM SHEETS ================= -->
-
-    <!-- 1. "Recorded at [Time]" Sheet (Screenshot 2) -->
-    <div id="recorded-sheet-modal" onclick="if(event.target === this) closeRecordedSheet()" class="fixed inset-0 z-50 flex flex-col justify-end bg-black/50 backdrop-blur-xs hidden animate-fade-in">
-      <div class="w-full bg-[#F2F2F7] rounded-t-[36px] max-h-[92%] flex flex-col overflow-hidden animate-slide-up shadow-2xl border-t border-white/40">
-        
-        <!-- Top bar with close X and Date -->
-        <div class="px-5 pt-4 pb-2 flex items-center justify-between border-b border-gray-200/50">
-          <button onclick="closeRecordedSheet()" class="w-8 h-8 rounded-full bg-gray-200/80 hover:bg-gray-300 text-gray-700 flex items-center justify-center transition-all">
-            <span class="material-symbols-rounded text-lg font-bold">close</span>
-          </button>
-          <div id="recorded-sheet-date" class="text-sm font-bold text-gray-900">Wednesday, Apr 1</div>
-          <div class="w-8"></div> <!-- spacer -->
+      <!-- Week Calendar Strip (S M T W T F S with Fixed Liquid-Fill Beads) -->
+      <div class="bg-white rounded-3xl p-4 sm:p-6 shadow-xs border border-gray-100">
+        <div class="text-xs font-black text-gray-400 uppercase tracking-wider mb-2 ml-1">Weekly Adherence Calendar</div>
+        <div id="week-calendar-strip" class="flex items-center justify-between">
+          <!-- Dynamically populated without SVG clipping errors -->
         </div>
+      </div>
 
-        <!-- Body -->
-        <div class="p-6 overflow-y-auto no-scrollbar flex-1 pb-10">
-          <!-- Top pill icon header -->
-          <div class="flex justify-center mb-3">
-            <div class="w-14 h-14 rounded-full bg-cyan-50 flex items-center justify-center shadow-inner">
-              <span class="material-symbols-rounded text-cyan-500 text-3xl">medication</span>
+      <!-- Responsive Multi-Column Layout (Mobile: single column | Desktop: 2 columns) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Left Column: Scheduled Doses (Log + Logged) -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <!-- Section: "Log" (Upcoming / Untaken Doses) -->
+          <div>
+            <h2 class="text-2xl font-black text-gray-900 tracking-tight mb-3">Log</h2>
+            <div id="log-upcoming-section">
+              <!-- Dynamically populated (e.g. 12:00 PM Calcium + As Needed card) -->
             </div>
           </div>
 
-          <h2 id="recorded-sheet-title" class="text-2xl font-black text-center text-gray-900 mb-0.5">Recorded at 8:00 AM</h2>
-          <p id="recorded-sheet-count" class="text-sm font-semibold text-center text-gray-500 mb-6">2 Medications</p>
-
-          <!-- List of medication cards -->
-          <div id="recorded-sheet-meds-list">
-            <!-- Rendered by openRecordedSheet() -->
+          <!-- Section: "Logged" (Recorded Doses) -->
+          <div id="logged-section" style="display: none;">
+            <h2 class="text-2xl font-black text-gray-900 tracking-tight mb-3">Logged</h2>
+            <div id="logged-list">
+              <!-- Dynamically populated with completed doses -->
+            </div>
           </div>
 
-          <!-- Bottom Sticky Done button -->
-          <button onclick="closeRecordedSheet()" class="w-full py-4 rounded-full bg-gray-200/90 hover:bg-gray-300 text-gray-800 font-bold text-base shadow-sm active:scale-98 transition-all mt-4">
-            Done
-          </button>
+        </div>
+
+        <!-- Right Column: Cabinet / Your Medications (Desktop Sidebar) -->
+        <div class="lg:col-span-5 space-y-6">
+          
+          <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-xs border border-gray-100">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h2 class="text-2xl font-black text-gray-900 tracking-tight">Your Medications</h2>
+                <p class="text-xs font-bold text-gray-400">Active prescriptions & schedule</p>
+              </div>
+              <button onclick="openAddMedicationModal()" class="text-sm font-black text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full transition-all">
+                + Add
+              </button>
+            </div>
+            
+            <div id="your-meds-list">
+              <!-- Dynamically populated list of medication cards -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ================= VIEW 2: SUMMARY (Fixed Weekly Report & Insights) ================= -->
+    <div id="view-summary" class="hidden">
+      <div class="mb-6">
+        <h1 class="text-3xl font-black text-gray-900 tracking-tight mb-1">Health Summary</h1>
+        <p class="text-sm font-bold text-gray-500">Adherence consistency, trends, and cabinet refill analytics</p>
+      </div>
+      <div id="summary-stats-content">
+        <!-- Dynamically populated by renderSummaryStats() -->
+      </div>
+    </div>
+
+    <!-- ================= VIEW 3: SHARING (Medical ID & Report Export) ================= -->
+    <div id="view-sharing" class="hidden">
+      <div class="mb-6 text-center max-w-xl mx-auto">
+        <h1 class="text-3xl font-black text-gray-900 tracking-tight mb-1">Medical Sharing</h1>
+        <p class="text-sm font-bold text-gray-500">Share your medication schedule with physicians, caregivers, or export reports</p>
+      </div>
+      <div id="sharing-view-content">
+        <!-- Dynamically populated by renderSharingView() -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= MOBILE FLOATING FROSTED GLASS TAB BAR (Only on small screens) ================= -->
+  <nav aria-label="Mobile Navigation" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-40 w-[92%] max-w-[380px] md:hidden">
+    <div class="ios-glass rounded-full px-6 py-2.5 flex items-center justify-around shadow-2xl border border-white/70">
+      
+      <button id="tab-btn-browse_meds" onclick="switchTab('browse_meds')" class="flex flex-col items-center text-blue-600 font-black transition-all ios-touch py-1">
+        <span class="material-symbols-rounded text-[26px]">apps</span>
+        <span class="text-xs font-bold mt-0.5">Schedule</span>
+      </button>
+
+      <button id="tab-btn-summary" onclick="switchTab('summary')" class="flex flex-col items-center text-gray-400 font-bold hover:text-blue-600 transition-all ios-touch py-1">
+        <span class="material-symbols-rounded text-[26px]">favorite</span>
+        <span class="text-xs font-bold mt-0.5">Summary</span>
+      </button>
+
+      <button id="tab-btn-sharing" onclick="switchTab('sharing')" class="flex flex-col items-center text-gray-400 font-bold hover:text-blue-600 transition-all ios-touch py-1">
+        <span class="material-symbols-rounded text-[26px]">group</span>
+        <span class="text-xs font-bold mt-0.5">Sharing</span>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- ================= MODALS & BOTTOM SHEETS ================= -->
+
+  <!-- 1. "Recorded at [Time]" Sheet (Screenshot 2) -->
+  <div id="recorded-sheet-modal" onclick="if(event.target === this) closeRecordedSheet()" class="fixed inset-0 z-50 flex flex-col justify-end sm:justify-center items-center bg-black/50 backdrop-blur-xs hidden animate-fade-in p-0 sm:p-4">
+    <div class="w-full max-w-xl bg-[#F4F5F9] rounded-t-[36px] sm:rounded-3xl max-h-[92vh] flex flex-col overflow-hidden animate-slide-up shadow-2xl border border-white/40">
+      
+      <div class="px-6 py-4 flex items-center justify-between border-b border-gray-200/60 bg-white">
+        <button onclick="closeRecordedSheet()" class="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition-all">
+          <span class="material-symbols-rounded text-xl font-bold">close</span>
+        </button>
+        <div id="recorded-sheet-date" class="text-base font-black text-gray-900">Wednesday, Apr 1</div>
+        <div class="w-9"></div>
+      </div>
+
+      <div class="p-6 overflow-y-auto no-scrollbar flex-1 pb-10">
+        <div class="flex justify-center mb-3">
+          <div class="w-16 h-16 rounded-full bg-cyan-50 flex items-center justify-center shadow-inner">
+            <span class="material-symbols-rounded text-cyan-500 text-4xl">medication</span>
+          </div>
+        </div>
+
+        <h2 id="recorded-sheet-title" class="text-3xl font-black text-center text-gray-900 mb-0.5">Recorded at 8:00 AM</h2>
+        <p id="recorded-sheet-count" class="text-base font-bold text-center text-gray-500 mb-6">2 Medications</p>
+
+        <div id="recorded-sheet-meds-list">
+          <!-- Populated by JS -->
+        </div>
+
+        <button onclick="closeRecordedSheet()" class="w-full py-4 rounded-2xl bg-gray-200/90 hover:bg-gray-300 text-gray-900 font-black text-lg shadow-sm active:scale-98 transition-all mt-4">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. "Review Details" Modal (Screenshot 5) -->
+  <div id="review-details-modal" onclick="if(event.target === this) closeReviewDetails()" class="fixed inset-0 z-50 flex flex-col justify-end sm:justify-center items-center bg-black/50 backdrop-blur-xs hidden animate-fade-in p-0 sm:p-4">
+    <div id="review-details-content" class="w-full max-w-xl bg-[#F4F5F9] rounded-t-[36px] sm:rounded-3xl max-h-[92vh] flex flex-col overflow-y-auto no-scrollbar animate-slide-up shadow-2xl border border-white/40">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- 3. "Edit Schedule" Modal (Screenshot 1) -->
+  <div id="edit-schedule-modal" onclick="if(event.target === this) closeEditSchedule()" class="fixed inset-0 z-50 flex flex-col justify-end sm:justify-center items-center bg-black/50 backdrop-blur-xs hidden animate-fade-in p-0 sm:p-4">
+    <div id="edit-schedule-content" class="w-full max-w-xl bg-[#F4F5F9] rounded-t-[36px] sm:rounded-3xl max-h-[92vh] flex flex-col overflow-hidden animate-slide-up shadow-2xl border border-white/40">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- 4. "As Needed (PRN) Medications" Modal -->
+  <div id="as-needed-modal" onclick="if(event.target === this) closeAsNeededSheet()" class="fixed inset-0 z-50 flex flex-col justify-end sm:justify-center items-center bg-black/50 backdrop-blur-xs hidden animate-fade-in p-0 sm:p-4">
+    <div class="w-full max-w-xl bg-white rounded-t-[36px] sm:rounded-3xl max-h-[85vh] flex flex-col overflow-hidden animate-slide-up shadow-2xl">
+      <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div class="w-9"></div>
+        <h2 class="text-xl font-black text-gray-900">As Needed Medications</h2>
+        <button onclick="closeAsNeededSheet()" class="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center">
+          <span class="material-symbols-rounded text-xl">close</span>
+        </button>
+      </div>
+      <div class="p-6 overflow-y-auto no-scrollbar flex-1 pb-10">
+        <p class="text-sm font-semibold text-gray-500 mb-5">Tap any medication to log an unscheduled dose right now.</p>
+        <div id="as-needed-list">
+          <!-- Populated by JS -->
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- 2. "Review Details" Modal (Screenshot 5) -->
-    <div id="review-details-modal" onclick="if(event.target === this) closeReviewDetails()" class="fixed inset-0 z-50 flex flex-col justify-end bg-black/50 backdrop-blur-xs hidden animate-fade-in">
-      <div id="review-details-content" class="w-full bg-[#F2F2F7] rounded-t-[36px] max-h-[92%] flex flex-col overflow-y-auto no-scrollbar animate-slide-up shadow-2xl">
-        <!-- Rendered by openReviewDetails() -->
+  <!-- 5. REDESIGNED: "Add New Medication" Wizard Modal -->
+  <div id="add-med-modal" onclick="if(event.target === this) closeAddMedicationModal()" class="fixed inset-0 z-50 flex flex-col justify-end sm:justify-center items-center bg-black/50 backdrop-blur-xs hidden animate-fade-in p-0 sm:p-4">
+    <div class="w-full max-w-2xl bg-white rounded-t-[36px] sm:rounded-3xl max-h-[95vh] flex flex-col overflow-hidden animate-slide-up shadow-2xl">
+      
+      <!-- Top Sticky Header -->
+      <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
+        <button onclick="closeAddMedicationModal()" class="text-gray-500 hover:text-gray-900 font-bold text-base">Cancel</button>
+        <h2 class="text-xl font-black text-gray-900">Add Medication</h2>
+        <button onclick="saveNewMedication(event)" class="text-blue-600 hover:text-blue-700 font-black text-base">Save</button>
       </div>
-    </div>
 
-    <!-- 3. "Edit Schedule" Modal (Screenshot 1) -->
-    <div id="edit-schedule-modal" onclick="if(event.target === this) closeEditSchedule()" class="fixed inset-0 z-50 flex flex-col justify-end bg-black/50 backdrop-blur-xs hidden animate-fade-in">
-      <div id="edit-schedule-content" class="w-full bg-[#F2F2F7] rounded-t-[36px] max-h-[92%] flex flex-col overflow-hidden animate-slide-up shadow-2xl">
-        <!-- Rendered by openEditSchedule() -->
-      </div>
-    </div>
-
-    <!-- 4. "As Needed Medications" Modal -->
-    <div id="as-needed-modal" onclick="if(event.target === this) closeAsNeededSheet()" class="fixed inset-0 z-50 flex flex-col justify-end bg-black/50 backdrop-blur-xs hidden animate-fade-in">
-      <div class="w-full bg-white rounded-t-[36px] max-h-[85%] flex flex-col overflow-hidden animate-slide-up shadow-2xl">
-        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-          <div class="w-8"></div>
-          <h2 class="text-base font-bold text-gray-900">As Needed Medications</h2>
-          <button onclick="closeAsNeededSheet()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center">
-            <span class="material-symbols-rounded text-lg">close</span>
-          </button>
-        </div>
-        <div class="p-5 overflow-y-auto no-scrollbar flex-1 pb-12">
-          <p class="text-xs text-gray-500 mb-4 font-medium">Log medications taken as needed for symptoms.</p>
-          <div id="as-needed-list">
+      <div class="p-6 md:p-8 overflow-y-auto no-scrollbar flex-1 pb-16 space-y-6">
+        
+        <!-- Quick Drug Presets (Autofill) -->
+        <div>
+          <label class="block text-xs font-black text-gray-400 uppercase tracking-wider mb-2">Popular Presets (Tap to Autofill)</label>
+          <div id="add-med-preset-chips" class="flex items-center space-x-2 overflow-x-auto py-1 no-scrollbar">
             <!-- Populated by JS -->
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- 5. "Add New Medication" Wizard Modal -->
-    <div id="add-med-modal" onclick="if(event.target === this) closeAddMedicationModal()" class="fixed inset-0 z-50 flex flex-col justify-end bg-black/50 backdrop-blur-xs hidden animate-fade-in">
-      <div class="w-full bg-white rounded-t-[36px] max-h-[94%] flex flex-col overflow-hidden animate-slide-up shadow-2xl">
-        
-        <!-- Header -->
-        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
-          <button onclick="closeAddMedicationModal()" class="text-blue-600 font-semibold text-sm">Cancel</button>
-          <h2 class="text-base font-bold text-gray-900">Add Medication</h2>
-          <button onclick="saveNewMedication(event)" class="text-blue-600 font-bold text-sm">Save</button>
+        <!-- 3D Pill Live Preview -->
+        <div class="text-center bg-gray-50 rounded-3xl p-6 border border-gray-100">
+          <div id="new-med-preview-avatar" class="flex justify-center mb-2">
+            <!-- Live Avatar -->
+          </div>
+          <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">3D Appearance Preview</span>
         </div>
 
-        <div class="p-5 overflow-y-auto no-scrollbar flex-1 pb-20 space-y-6">
-          
-          <!-- Live 3D Pill Preview -->
-          <div class="text-center bg-gray-50 rounded-3xl p-5 border border-gray-100">
-            <div id="new-med-preview-avatar" class="flex justify-center mb-2">
-              <!-- Rendered via JS -->
-            </div>
-            <span class="text-xs text-gray-400 font-medium">Live Pill Appearance</span>
-          </div>
-
-          <!-- Basic Info -->
-          <div class="space-y-3">
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1" for="new-med-name">Medication Name</label>
-              <input id="new-med-name" type="text" placeholder="e.g. Lisinopril, Metformin" required class="w-full px-4 py-3 bg-gray-100 rounded-2xl text-base font-semibold text-gray-900 outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1" for="new-med-dosage">Strength / Dosage</label>
-                <input id="new-med-dosage" type="text" placeholder="e.g. 50 mg, 10 ml" value="50 mg" class="w-full px-4 py-3 bg-gray-100 rounded-2xl text-sm font-semibold text-gray-900 outline-none focus:ring-2 focus:ring-blue-500" />
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1" for="new-med-nickname">Nickname</label>
-                <input id="new-med-nickname" type="text" placeholder="Optional" class="w-full px-4 py-3 bg-gray-100 rounded-2xl text-sm font-semibold text-gray-900 outline-none focus:ring-2 focus:ring-blue-500" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Shape & Color Customizer -->
+        <!-- Medication Name & Nickname -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Pill Shape</label>
-            <div class="grid grid-cols-4 gap-2">
-              <button type="button" onclick="setDraftPillShape('tablet')" class="py-2.5 px-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-bold text-gray-800 flex flex-col items-center active:scale-95 transition-all">
-                <span class="w-4 h-4 rounded-full bg-yellow-400 shadow-xs mb-1"></span>
-                Tablet
-              </button>
-              <button type="button" onclick="setDraftPillShape('capsule')" class="py-2.5 px-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-bold text-gray-800 flex flex-col items-center active:scale-95 transition-all">
-                <span class="w-6 h-3 rounded-full bg-blue-500 shadow-xs mb-1"></span>
-                Capsule
-              </button>
-              <button type="button" onclick="setDraftPillShape('caplet')" class="py-2.5 px-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-bold text-gray-800 flex flex-col items-center active:scale-95 transition-all">
-                <span class="w-5 h-3 rounded-md bg-red-400 shadow-xs mb-1"></span>
-                Caplet
-              </button>
-              <button type="button" onclick="setDraftPillShape('liquid')" class="py-2.5 px-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-bold text-gray-800 flex flex-col items-center active:scale-95 transition-all">
-                <span class="material-symbols-rounded text-blue-500 text-base mb-0.5">water_drop</span>
-                Liquid
-              </button>
-            </div>
+            <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-1" for="new-med-name">Medication Name *</label>
+            <input id="new-med-name" type="text" placeholder="e.g. Lisinopril, Metformin" required class="w-full px-4 py-3.5 bg-gray-100 rounded-2xl text-base font-bold text-gray-900 outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
-
-          <!-- Color Swatches -->
           <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Color Palette</label>
-            <div class="flex items-center space-x-2.5 overflow-x-auto py-1 no-scrollbar">
-              <!-- Mauve -->
-              <button type="button" onclick="setDraftColor('#EBDDF5', '#FDE0B4', '#FDE0B4')" class="w-8 h-8 rounded-full bg-[#EBDDF5] border-2 border-white shadow-md active:scale-90 flex-shrink-0"></button>
-              <!-- Sage Olive -->
-              <button type="button" onclick="setDraftColor('#EAF2CC', '#B0BD48', '#F3E5AB')" class="w-8 h-8 rounded-full bg-[#EAF2CC] border-2 border-white shadow-md active:scale-90 flex-shrink-0"></button>
-              <!-- Yellow -->
-              <button type="button" onclick="setDraftColor('#FEF4CC', '#FACC15', '#FFFFFF')" class="w-8 h-8 rounded-full bg-[#FEF4CC] border-2 border-white shadow-md active:scale-90 flex-shrink-0"></button>
-              <!-- Cyan Blue -->
-              <button type="button" onclick="setDraftColor('#E0F2FE', '#38BDF8', '#0284C7')" class="w-8 h-8 rounded-full bg-[#E0F2FE] border-2 border-white shadow-md active:scale-90 flex-shrink-0"></button>
-              <!-- Coral Pink -->
-              <button type="button" onclick="setDraftColor('#FEE2E2', '#F87171', '#EF4444')" class="w-8 h-8 rounded-full bg-[#FEE2E2] border-2 border-white shadow-md active:scale-90 flex-shrink-0"></button>
-              <!-- Mint -->
-              <button type="button" onclick="setDraftColor('#DCFCE7', '#22C55E', '#16A34A')" class="w-8 h-8 rounded-full bg-[#DCFCE7] border-2 border-white shadow-md active:scale-90 flex-shrink-0"></button>
-              <!-- Pure White -->
-              <button type="button" onclick="setDraftColor('#F3F4F6', '#FFFFFF', '#E5E7EB')" class="w-8 h-8 rounded-full bg-white border border-gray-300 shadow-md active:scale-90 flex-shrink-0"></button>
-            </div>
+            <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-1" for="new-med-nickname">Nickname / Brand (Optional)</label>
+            <input id="new-med-nickname" type="text" placeholder="e.g. Blood Pressure, Zestril" class="w-full px-4 py-3.5 bg-gray-100 rounded-2xl text-base font-bold text-gray-900 outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
-
-          <!-- Schedule Options -->
-          <div class="space-y-3">
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1" for="new-med-frequency">Frequency</label>
-              <select id="new-med-frequency" class="w-full px-4 py-3 bg-gray-100 rounded-2xl text-sm font-semibold text-gray-900 outline-none">
-                <option value="every_day">Every Day</option>
-                <option value="cyclical">Cyclical Schedule (21 on / 7 off)</option>
-                <option value="as_needed">As Needed (PRN)</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1" for="new-med-time">First Reminder Time</label>
-              <input id="new-med-time" type="time" value="09:00" class="w-full px-4 py-3 bg-gray-100 rounded-2xl text-sm font-semibold text-gray-900 outline-none" />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1" for="new-med-notes">Instructions / Notes</label>
-              <textarea id="new-med-notes" rows="2" placeholder="e.g. Take with a meal, avoid alcohol" class="w-full px-4 py-2.5 bg-gray-100 rounded-2xl text-sm text-gray-900 outline-none"></textarea>
-            </div>
-          </div>
-
-          <!-- Submit Button -->
-          <button type="button" onclick="saveNewMedication(event)" class="w-full py-4 rounded-2xl bg-blue-500 hover:bg-blue-600 text-white font-bold text-base shadow-md active:scale-98 transition-all">
-            Add to Medications
-          </button>
         </div>
+
+        <!-- Strength & Unit -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-1" for="new-med-dosage">Strength Amount</label>
+            <input id="new-med-dosage" type="text" placeholder="50" value="50" class="w-full px-4 py-3.5 bg-gray-100 rounded-2xl text-base font-bold text-gray-900 outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-1" for="new-med-unit">Unit</label>
+            <select id="new-med-unit" class="w-full px-4 py-3.5 bg-gray-100 rounded-2xl text-base font-bold text-gray-900 outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="mg" selected>mg (milligrams)</option>
+              <option value="mcg">mcg (micrograms)</option>
+              <option value="ml">ml (milliliters)</option>
+              <option value="IU">IU (units)</option>
+              <option value="drops">drops</option>
+              <option value="puffs">puffs</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Pill Shape Selection -->
+        <div>
+          <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-2">Form & Shape</label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <button type="button" id="shape-btn-tablet" onclick="setDraftPillShape('tablet')" class="shape-btn py-3 px-3 rounded-2xl bg-gray-100 hover:bg-gray-200 text-sm font-black text-gray-800 flex flex-col items-center ring-2 ring-blue-500 bg-blue-50 transition-all">
+              <span class="w-6 h-6 rounded-full bg-amber-400 shadow-xs mb-1.5 flex items-center justify-center">
+                <span class="w-4 h-0.5 bg-amber-600/40 rounded"></span>
+              </span>
+              Round Tablet
+            </button>
+            <button type="button" id="shape-btn-capsule" onclick="setDraftPillShape('capsule')" class="shape-btn py-3 px-3 rounded-2xl bg-gray-100 hover:bg-gray-200 text-sm font-black text-gray-800 flex flex-col items-center transition-all">
+              <span class="w-8 h-4 rounded-full bg-blue-500 shadow-xs mb-1.5 flex overflow-hidden">
+                <span class="w-1/2 h-full bg-blue-600"></span>
+                <span class="w-1/2 h-full bg-amber-200"></span>
+              </span>
+              Capsule
+            </button>
+            <button type="button" id="shape-btn-caplet" onclick="setDraftPillShape('caplet')" class="shape-btn py-3 px-3 rounded-2xl bg-gray-100 hover:bg-gray-200 text-sm font-black text-gray-800 flex flex-col items-center transition-all">
+              <span class="w-7 h-4 rounded-lg bg-red-400 shadow-xs mb-1.5"></span>
+              Caplet
+            </button>
+            <button type="button" id="shape-btn-liquid" onclick="setDraftPillShape('liquid')" class="shape-btn py-3 px-3 rounded-2xl bg-gray-100 hover:bg-gray-200 text-sm font-black text-gray-800 flex flex-col items-center transition-all">
+              <span class="material-symbols-rounded text-blue-500 text-2xl mb-1">water_drop</span>
+              Liquid / Drops
+            </button>
+          </div>
+        </div>
+
+        <!-- Color Palette -->
+        <div>
+          <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-2">Color Theme</label>
+          <div class="flex items-center space-x-3 overflow-x-auto py-1 no-scrollbar">
+            <!-- Yellow -->
+            <button type="button" onclick="setDraftColor('#FEF4CC', '#FACC15', '#FFFFFF')" class="w-10 h-10 rounded-full bg-[#FEF4CC] border-2 border-white shadow-md active:scale-90 flex-shrink-0" title="Yellow"></button>
+            <!-- Mauve -->
+            <button type="button" onclick="setDraftColor('#EBDDF5', '#FDE0B4', '#FDE0B4')" class="w-10 h-10 rounded-full bg-[#EBDDF5] border-2 border-white shadow-md active:scale-90 flex-shrink-0" title="Mauve / Cream"></button>
+            <!-- Sage Olive -->
+            <button type="button" onclick="setDraftColor('#EAF2CC', '#B0BD48', '#F3E5AB')" class="w-10 h-10 rounded-full bg-[#EAF2CC] border-2 border-white shadow-md active:scale-90 flex-shrink-0" title="Olive Green"></button>
+            <!-- Cyan Blue -->
+            <button type="button" onclick="setDraftColor('#E0F2FE', '#38BDF8', '#0284C7')" class="w-10 h-10 rounded-full bg-[#E0F2FE] border-2 border-white shadow-md active:scale-90 flex-shrink-0" title="Ocean Blue"></button>
+            <!-- Coral Pink -->
+            <button type="button" onclick="setDraftColor('#FEE2E2', '#F87171', '#EF4444')" class="w-10 h-10 rounded-full bg-[#FEE2E2] border-2 border-white shadow-md active:scale-90 flex-shrink-0" title="Coral"></button>
+            <!-- Mint Green -->
+            <button type="button" onclick="setDraftColor('#DCFCE7', '#22C55E', '#16A34A')" class="w-10 h-10 rounded-full bg-[#DCFCE7] border-2 border-white shadow-md active:scale-90 flex-shrink-0" title="Mint"></button>
+            <!-- White / Gray -->
+            <button type="button" onclick="setDraftColor('#F3F4F6', '#FFFFFF', '#E5E7EB')" class="w-10 h-10 rounded-full bg-white border border-gray-300 shadow-md active:scale-90 flex-shrink-0" title="Pure White"></button>
+          </div>
+        </div>
+
+        <!-- Food Instructions Chips -->
+        <div>
+          <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-2">Meal Instructions</label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button type="button" id="meal-btn-with_food" onclick="setMealInstruction('with_food')" class="meal-btn py-2.5 px-3 rounded-xl bg-blue-500 text-white text-xs font-bold transition-all">🍽️ With Food</button>
+            <button type="button" id="meal-btn-before_food" onclick="setMealInstruction('before_food')" class="meal-btn py-2.5 px-3 rounded-xl bg-gray-100 text-gray-700 text-xs font-bold transition-all">🥐 Before Food</button>
+            <button type="button" id="meal-btn-after_food" onclick="setMealInstruction('after_food')" class="meal-btn py-2.5 px-3 rounded-xl bg-gray-100 text-gray-700 text-xs font-bold transition-all">☕ After Food</button>
+            <button type="button" id="meal-btn-empty_stomach" onclick="setMealInstruction('empty_stomach')" class="meal-btn py-2.5 px-3 rounded-xl bg-gray-100 text-gray-700 text-xs font-bold transition-all">💧 Empty Stomach</button>
+          </div>
+        </div>
+
+        <!-- Frequency & Timing -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-1" for="new-med-frequency">Schedule Frequency</label>
+            <select id="new-med-frequency" class="w-full px-4 py-3.5 bg-gray-100 rounded-2xl text-base font-bold text-gray-900 outline-none">
+              <option value="every_day">Every Day</option>
+              <option value="cyclical">Cyclical Schedule (21 on / 7 off)</option>
+              <option value="as_needed">As Needed (PRN)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-1" for="new-med-time">First Reminder Time</label>
+            <input id="new-med-time" type="time" value="08:00" class="w-full px-4 py-3.5 bg-gray-100 rounded-2xl text-base font-black text-gray-900 outline-none" />
+          </div>
+        </div>
+
+        <!-- Inventory / Bottle Supply -->
+        <div>
+          <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-1" for="new-med-supply">Current Supply Quantity</label>
+          <input id="new-med-supply" type="number" min="1" max="500" value="30" class="w-full px-4 py-3.5 bg-gray-100 rounded-2xl text-base font-bold text-gray-900 outline-none" />
+        </div>
+
+        <!-- Notes -->
+        <div>
+          <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-1" for="new-med-notes">Notes & Instructions</label>
+          <textarea id="new-med-notes" rows="2" placeholder="e.g. Avoid taking with grapefruit juice, store in cool place" class="w-full px-4 py-3 bg-gray-100 rounded-2xl text-base text-gray-900 outline-none"></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="button" onclick="saveNewMedication(event)" class="w-full py-4 rounded-2xl bg-blue-500 hover:bg-blue-600 text-white font-black text-lg shadow-md active:scale-98 transition-all">
+          Save Medication to Schedule
+        </button>
+
       </div>
     </div>
-
   </div>
 
   <!-- Scripts -->
