@@ -648,12 +648,14 @@ window.quickLogDose = function(medId, time, status = 'taken') {
 };
 
 // --- Smooth Modal Close Helper ---
-function dismissModal(modalId, sheetQuery = '> div') {
+function dismissModal(modalId) {
   const modal = document.getElementById(modalId);
-  if (!modal || modal.classList.contains('hidden')) return;
+  if (!modal) return;
 
-  const sheet = modal.querySelector(sheetQuery);
-  if (sheet) sheet.classList.add('sheet-closing');
+  const sheet = modal.firstElementChild;
+  if (sheet) {
+    sheet.classList.add('sheet-closing');
+  }
   modal.classList.add('backdrop-closing');
 
   setTimeout(() => {
@@ -661,7 +663,7 @@ function dismissModal(modalId, sheetQuery = '> div') {
     if (sheet) sheet.classList.remove('sheet-closing');
     modal.classList.remove('backdrop-closing');
     document.body.classList.remove('overflow-hidden');
-  }, 220);
+  }, 200);
 }
 
 // --- Recorded At Modal Sheet (Screenshot 2) ---
@@ -756,7 +758,7 @@ window.toggleDoseStatus = function(medId, timeKey, desiredStatus) {
 };
 
 window.closeRecordedSheet = function() {
-  dismissModal('recorded-sheet-modal', '> div');
+  dismissModal('recorded-sheet-modal');
   renderApp();
 };
 
@@ -831,7 +833,7 @@ window.openReviewDetails = function(medId) {
 };
 
 window.closeReviewDetails = function() {
-  dismissModal('review-details-modal', '#review-details-content');
+  dismissModal('review-details-modal');
   renderApp();
 };
 
