@@ -137,81 +137,11 @@ let appState = {
   }
 };
 
-// Web Audio Chime
+// Sound Manager (Completely disabled as requested)
 class SoundManager {
-  constructor() {
-    this.ctx = null;
-  }
-
-  init() {
-    if (!this.ctx && (window.AudioContext || window.webkitAudioContext)) {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      this.ctx = new AudioCtx();
-    }
-    if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume();
-    }
-  }
-
-  playTakeChime() {
-    if (!appState.settings.soundEnabled) return;
-    this.init();
-    if (!this.ctx) return;
-
-    try {
-      const now = this.ctx.currentTime;
-      const osc1 = this.ctx.createOscillator();
-      const osc2 = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-
-      osc1.type = 'sine';
-      osc2.type = 'sine';
-
-      osc1.frequency.setValueAtTime(1046.5, now);
-      osc1.frequency.exponentialRampToValueAtTime(1318.5, now + 0.12);
-
-      osc2.frequency.setValueAtTime(1567.98, now + 0.08);
-      osc2.frequency.exponentialRampToValueAtTime(2093.0, now + 0.22);
-
-      gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(0.18, now + 0.04);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-
-      osc1.connect(gain);
-      osc2.connect(gain);
-      gain.connect(this.ctx.destination);
-
-      osc1.start(now);
-      osc2.start(now + 0.08);
-      osc1.stop(now + 0.5);
-      osc2.stop(now + 0.5);
-    } catch (e) {}
-  }
-
-  playTapSound() {
-    if (!appState.settings.soundEnabled) return;
-    this.init();
-    if (!this.ctx) return;
-
-    try {
-      const now = this.ctx.currentTime;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(400, now);
-      osc.frequency.exponentialRampToValueAtTime(180, now + 0.05);
-
-      gain.gain.setValueAtTime(0.06, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.05);
-    } catch (e) {}
-  }
+  init() {}
+  playTakeChime() {}
+  playTapSound() {}
 }
 
 const sounds = new SoundManager();
@@ -294,17 +224,21 @@ function showToast(message, subtitle = '', icon = 'check_circle') {
 
   const iconEl = toast.querySelector('.toast-icon');
   const textEl = toast.querySelector('.toast-text');
-  const subEl = toast.querySelector('.toast-sub');
 
   if (iconEl) iconEl.textContent = icon;
-  if (textEl) textEl.textContent = message;
-  if (subEl) subEl.textContent = subtitle;
+  if (textEl) {
+    const action = subtitle ? ` ${subtitle.toLowerCase()}` : ' recorded';
+    textEl.textContent = `${message}${action}`;
+  }
 
-  toast.classList.add('show');
+  toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+  toast.classList.add('opacity-100', 'translate-y-0');
+
   clearTimeout(toast._timeout);
   toast._timeout = setTimeout(() => {
-    toast.classList.remove('show');
-  }, 2300);
+    toast.classList.remove('opacity-100', 'translate-y-0');
+    toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+  }, 2200);
 }
 
 // --- Render 3D Pill Graphics ---
@@ -1035,7 +969,7 @@ window.saveScheduleChanges = function() {
 };
 
 window.closeEditSchedule = function() {
-  dismissModal('edit-schedule-modal', '#edit-schedule-content');
+  dismissModal('edit-schedule-modal');
   if (editingMedId) openReviewDetails(editingMedId);
 };
 
@@ -1090,7 +1024,7 @@ window.logAsNeededDose = function(medId) {
 };
 
 window.closeAsNeededSheet = function() {
-  dismissModal('as-needed-modal', '> div');
+  dismissModal('as-needed-modal');
 };
 
 // --- Add New Medication ---
@@ -1231,7 +1165,10 @@ window.setMealInstruction = function(meal) {
 };
 
 window.saveNewMedication = function(e) {
-  if (e) e.preventDefault();
+  if (e) {
+    if (typeof e.preventDefault === 'function') e.preventDefault();
+    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+  }
   const nameInput = document.getElementById('new-med-name');
   const doseInput = document.getElementById('new-med-dosage');
   const unitSelect = document.getElementById('new-med-unit');
@@ -1241,18 +1178,18 @@ window.saveNewMedication = function(e) {
   const timeInput = document.getElementById('new-med-time');
   const supplyInput = document.getElementById('new-med-supply');
 
-  if (!nameInput.value.trim()) {
-    alert('Please enter medication name');
-    nameInput.focus();
+  if (!nameInput || !nameInput.value.trim()) {
+    alert('Please enter a medication name');
+    if (nameInput) nameInput.focus();
     return;
   }
 
   const id = `med_${Date.now()}`;
-  const freq = freqSelect.value;
+  const freq = freqSelect ? freqSelect.value : 'every_day';
   const isPrn = freq === 'as_needed';
 
   let times = [];
-  if (!isPrn && timeInput.value) {
+  if (!isPrn && timeInput && timeInput.value) {
     const [h, m] = timeInput.value.split(':');
     const hourNum = parseInt(h, 10);
     const ampm = hourNum >= 12 ? 'PM' : 'AM';
@@ -1261,24 +1198,33 @@ window.saveNewMedication = function(e) {
       time: timeInput.value,
       label: `${displayHour}:${m} ${ampm}`,
       quantity: 1,
-      unit: newMedDraft.form.toLowerCase()
+      unit: (newMedDraft.form || 'tablet').toLowerCase()
+    });
+  } else if (!isPrn) {
+    times.push({
+      time: '08:00',
+      label: '8:00 AM',
+      quantity: 1,
+      unit: (newMedDraft.form || 'tablet').toLowerCase()
     });
   }
 
-  const fullDosage = `${doseInput.value.trim()} ${unitSelect.value}`;
+  const doseStr = doseInput ? doseInput.value.trim() : '50';
+  const unitStr = unitSelect ? unitSelect.value : 'mg';
+  const fullDosage = `${doseStr} ${unitStr}`;
 
   const newMed = {
     ...newMedDraft,
     id,
     name: nameInput.value.trim(),
     dosage: fullDosage,
-    nickname: nicknameInput.value.trim(),
-    notes: notesInput.value.trim(),
+    nickname: nicknameInput ? nicknameInput.value.trim() : '',
+    notes: notesInput ? notesInput.value.trim() : '',
     frequency: freq,
     asNeeded: isPrn,
     times: times,
-    remainingPills: parseInt(supplyInput.value || 30, 10),
-    totalPills: parseInt(supplyInput.value || 30, 10),
+    remainingPills: parseInt(supplyInput ? supplyInput.value : 30, 10) || 30,
+    totalPills: parseInt(supplyInput ? supplyInput.value : 30, 10) || 30,
     startDate: formatDateKey(new Date())
   };
 
@@ -1291,7 +1237,7 @@ window.saveNewMedication = function(e) {
 };
 
 window.closeAddMedicationModal = function() {
-  dismissModal('add-med-modal', '> div');
+  dismissModal('add-med-modal');
 };
 
 // --- Smooth Page Transition Tab Switching ---
