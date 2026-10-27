@@ -1,25 +1,23 @@
 /**
- * Medication Reminder - Gabarito Font + Apple & Material 3 Web App
- * Fully responsive client-side app for Mobile & Desktop (GitHub Pages)
+ * Medication Reminder - Apple HIG & Material 3 Hybrid
+ * Client-Side Application for GitHub Pages
  */
 
-// Storage Keys
 const STORAGE_KEYS = {
-  MEDICATIONS: 'apple_health_medications_v2',
-  LOGS: 'apple_health_logs_v2',
-  SETTINGS: 'apple_health_settings_v2',
-  PROFILE: 'apple_health_profile_v2',
+  MEDICATIONS: 'apple_health_medications_v3',
+  LOGS: 'apple_health_logs_v3',
+  SETTINGS: 'apple_health_settings_v3',
+  PROFILE: 'apple_health_profile_v3',
 };
 
-// Common Medication Presets for fast autofill
+// Common Presets for fast autofill
 const COMMON_PRESETS = [
   { name: 'Levothyroxine', dosage: '200', unit: 'mcg', form: 'Tablet', shape: 'tablet', bg: '#EBDDF5', pill: '#FDE0B4', sec: '#FDE0B4', freq: 'every_day', time: '08:00', meal: 'empty_stomach', notes: 'Take 30-60 min before breakfast with water.' },
-  { name: 'Omega-3', dosage: '1000', unit: 'mg', form: 'Capsule', shape: 'capsule', bg: '#EAF2CC', pill: '#B0BD48', sec: '#F3E5AB', freq: 'every_day', time: '08:00', meal: 'with_food', notes: 'Take with morning meal to optimize absorption.' },
-  { name: 'Calcium + D3', dosage: '600', unit: 'mg', form: 'Tablet', shape: 'tablet', bg: '#FEF4CC', pill: '#FFFFFF', sec: '#FFFFFF', freq: 'every_day', time: '12:00', meal: 'with_food', notes: 'Take with lunch or dinner.' },
-  { name: 'Aspirin', dosage: '81', unit: 'mg', form: 'Tablet', shape: 'tablet', bg: '#FEF4CC', pill: '#FFFFFF', sec: '#FFFFFF', freq: 'cyclical', time: '08:50', meal: 'with_food', notes: 'Low dose cardio protective. Take with food.' },
-  { name: 'Metformin', dosage: '500', unit: 'mg', form: 'Tablet', shape: 'caplet', bg: '#E0F2FE', pill: '#38BDF8', sec: '#38BDF8', freq: 'every_day', time: '19:00', meal: 'with_food', notes: 'Take with evening meal.' },
-  { name: 'Atorvastatin', dosage: '20', unit: 'mg', form: 'Tablet', shape: 'tablet', bg: '#F3E8FF', pill: '#C084FC', sec: '#C084FC', freq: 'every_day', time: '21:00', meal: 'none', notes: 'Take at bedtime.' },
-  { name: 'Ibuprofen', dosage: '400', unit: 'mg', form: 'Tablet', shape: 'caplet', bg: '#FEE2E2', pill: '#F87171', sec: '#F87171', freq: 'as_needed', time: '', meal: 'with_food', notes: 'Take as needed for pain or fever.' }
+  { name: 'Omega-3', dosage: '1000', unit: 'mg', form: 'Capsule', shape: 'capsule', bg: '#EAF2CC', pill: '#B0BD48', sec: '#F3E5AB', freq: 'every_day', time: '08:00', meal: 'with_food', notes: 'Take with morning meal.' },
+  { name: 'Calcium + D3', dosage: '600', unit: 'mg', form: 'Tablet', shape: 'tablet', bg: '#FEF4CC', pill: '#FFFFFF', sec: '#FFFFFF', freq: 'every_day', time: '12:00', meal: 'with_food', notes: 'Take with lunch.' },
+  { name: 'Aspirin', dosage: '81', unit: 'mg', form: 'Tablet', shape: 'tablet', bg: '#FEF4CC', pill: '#FFFFFF', sec: '#FFFFFF', freq: 'cyclical', time: '08:50', meal: 'with_food', notes: 'Low dose cardio protective.' },
+  { name: 'Metformin', dosage: '500', unit: 'mg', form: 'Tablet', shape: 'caplet', bg: '#E0F2FE', pill: '#38BDF8', sec: '#38BDF8', freq: 'every_day', time: '19:00', meal: 'with_food', notes: 'Take with dinner.' },
+  { name: 'Ibuprofen', dosage: '400', unit: 'mg', form: 'Tablet', shape: 'caplet', bg: '#FEE2E2', pill: '#F87171', sec: '#F87171', freq: 'as_needed', time: '', meal: 'with_food', notes: 'Take as needed for pain.' }
 ];
 
 // Seed medications matching Apple Health screenshots
@@ -38,7 +36,7 @@ const DEFAULT_MEDICATIONS = [
     asNeeded: false,
     nickname: 'Thyroid',
     mealInstruction: 'empty_stomach',
-    notes: 'Take 30-60 min before breakfast with full glass of water.',
+    notes: 'Take 30 min before food on an empty stomach.',
     remainingPills: 24,
     totalPills: 30,
     startDate: '2026-04-01'
@@ -57,7 +55,7 @@ const DEFAULT_MEDICATIONS = [
     asNeeded: false,
     nickname: 'Fish Oil',
     mealInstruction: 'with_food',
-    notes: 'Take with morning meal to improve absorption.',
+    notes: 'Take with a meal.',
     remainingPills: 45,
     totalPills: 60,
     startDate: '2026-04-01'
@@ -76,7 +74,7 @@ const DEFAULT_MEDICATIONS = [
     asNeeded: false,
     nickname: 'Bone Health',
     mealInstruction: 'with_food',
-    notes: 'Take with lunch or dinner.',
+    notes: 'Take with food.',
     remainingPills: 18,
     totalPills: 30,
     startDate: '2026-04-01'
@@ -96,7 +94,7 @@ const DEFAULT_MEDICATIONS = [
     asNeeded: false,
     nickname: 'Baby Aspirin',
     mealInstruction: 'with_food',
-    notes: 'Low dose cardio protective. Take with food.',
+    notes: 'Take with food.',
     remainingPills: 60,
     totalPills: 90,
     startDate: '2026-04-01'
@@ -115,16 +113,16 @@ const DEFAULT_MEDICATIONS = [
     asNeeded: true,
     nickname: 'Advil',
     mealInstruction: 'with_food',
-    notes: 'Take for pain or fever as needed.',
+    notes: 'Take as needed for symptoms.',
     remainingPills: 20,
     totalPills: 30,
     startDate: '2026-04-01'
   }
 ];
 
-// App Global State
+// App State
 let appState = {
-  activeTab: 'browse_meds', // 'browse_meds' | 'summary' | 'sharing'
+  activeTab: 'browse_meds',
   selectedDate: new Date(),
   medications: [],
   logs: {},
@@ -139,7 +137,7 @@ let appState = {
   }
 };
 
-// Web Audio Chime Synthesizer
+// Web Audio Chime
 class SoundManager {
   constructor() {
     this.ctx = null;
@@ -176,8 +174,8 @@ class SoundManager {
       osc2.frequency.exponentialRampToValueAtTime(2093.0, now + 0.22);
 
       gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(0.2, now + 0.04);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+      gain.gain.linearRampToValueAtTime(0.18, now + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
 
       osc1.connect(gain);
       osc2.connect(gain);
@@ -185,8 +183,8 @@ class SoundManager {
 
       osc1.start(now);
       osc2.start(now + 0.08);
-      osc1.stop(now + 0.55);
-      osc2.stop(now + 0.55);
+      osc1.stop(now + 0.5);
+      osc2.stop(now + 0.5);
     } catch (e) {}
   }
 
@@ -201,17 +199,17 @@ class SoundManager {
       const gain = this.ctx.createGain();
 
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(440, now);
-      osc.frequency.exponentialRampToValueAtTime(200, now + 0.06);
+      osc.frequency.setValueAtTime(400, now);
+      osc.frequency.exponentialRampToValueAtTime(180, now + 0.05);
 
-      gain.gain.setValueAtTime(0.08, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
 
       osc.connect(gain);
       gain.connect(this.ctx.destination);
 
       osc.start(now);
-      osc.stop(now + 0.06);
+      osc.stop(now + 0.05);
     } catch (e) {}
   }
 }
@@ -231,7 +229,6 @@ function loadData() {
     if (storedSettings) appState.settings = { ...appState.settings, ...JSON.parse(storedSettings) };
     if (storedProfile) appState.profile = { ...appState.profile, ...JSON.parse(storedProfile) };
 
-    // Pre-seed today's 8:00 AM log so it immediately shows realistic sample data matching screenshots
     const todayStr = formatDateKey(appState.selectedDate);
     if (!appState.logs[todayStr]) {
       appState.logs[todayStr] = {
@@ -285,18 +282,18 @@ function formatDayHeader(d) {
 
 function getStartOfWeek(date) {
   const d = new Date(date);
-  const day = d.getDay(); // 0 is Sunday
+  const day = d.getDay();
   const diff = d.getDate() - day;
   return new Date(d.setDate(diff));
 }
 
-// --- Render 3D Pill Graphics ---
+// --- Render 3D Pill Graphics (HIG Proportionate) ---
 function renderPillAvatar(med, size = 'md') {
   const sizeMap = {
-    sm: { container: 'w-11 h-11', capsuleW: 'w-7 h-4', round: 'w-6 h-6' },
-    md: { container: 'w-14 h-14', capsuleW: 'w-9 h-4.5', round: 'w-7 h-7' },
-    lg: { container: 'w-16 h-16', capsuleW: 'w-11 h-5.5', round: 'w-9 h-9' },
-    xl: { container: 'w-24 h-24', capsuleW: 'w-16 h-8', round: 'w-13 h-13' },
+    sm: { container: 'w-10 h-10', capsuleW: 'w-7 h-3.5', round: 'w-5 h-5' },
+    md: { container: 'w-12 h-12', capsuleW: 'w-8 h-4', round: 'w-6 h-6' },
+    lg: { container: 'w-14 h-14', capsuleW: 'w-10 h-5', round: 'w-8 h-8' },
+    xl: { container: 'w-20 h-20', capsuleW: 'w-14 h-7', round: 'w-11 h-11' },
   };
 
   const dim = sizeMap[size] || sizeMap.md;
@@ -320,11 +317,7 @@ function renderPillAvatar(med, size = 'md') {
     `;
   } else if (med.shape === 'liquid') {
     pillHtml = `
-      <span class="material-symbols-rounded text-3xl text-blue-500 drop-shadow">water_drop</span>
-    `;
-  } else if (med.shape === 'inhaler') {
-    pillHtml = `
-      <span class="material-symbols-rounded text-3xl text-cyan-600 drop-shadow">air</span>
+      <span class="material-symbols-rounded text-2xl text-blue-500 drop-shadow-sm">water_drop</span>
     `;
   } else {
     // Round Tablet
@@ -334,7 +327,7 @@ function renderPillAvatar(med, size = 'md') {
   }
 
   return `
-    <div class="pill-avatar-container ${dim.container} rounded-full flex-shrink-0" style="background-color: ${bgCol};">
+    <div class="pill-avatar-container ${dim.container}" style="background-color: ${bgCol};">
       ${pillHtml}
     </div>
   `;
@@ -373,7 +366,7 @@ function getDayAdherence(date) {
   return { status: 'empty', percent: 0, taken: 0, total: totalScheduled };
 }
 
-// --- Render Week Strip (Completely Bug-Free Liquid Fill) ---
+// --- Render Week Strip (Clean Apple HIG Layout) ---
 function renderWeekCalendar() {
   const weekContainer = document.getElementById('week-calendar-strip');
   if (!weekContainer) return;
@@ -393,24 +386,24 @@ function renderWeekCalendar() {
     const isFull = fillPercent === 100;
 
     html += `
-      <div class="flex flex-col items-center flex-1 cursor-pointer select-none group py-1" onclick="selectDate('${curDate.toISOString()}')">
-        <!-- Inverted Triangle Indicator -->
-        <div class="h-4 flex items-center justify-center mb-1">
-          ${isSelected ? `<span class="text-xs text-black font-black">▼</span>` : '<span class="text-xs opacity-0">▼</span>'}
+      <div class="flex flex-col items-center flex-1 cursor-pointer select-none group py-0.5" onclick="selectDate('${curDate.toISOString()}')">
+        <!-- Small Inverted Caret Indicator for Selected Day -->
+        <div class="h-3 flex items-center justify-center mb-1">
+          ${isSelected ? `<span class="text-[9px] text-[#1C1C1E]">▼</span>` : '<span class="text-[9px] opacity-0">▼</span>'}
         </div>
         
         <!-- Day Letter Bubble -->
-        <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${isSelected ? 'bg-black text-white shadow-sm' : 'text-gray-500 hover:bg-gray-100'}">
+        <div class="w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-medium transition-all ${isSelected ? 'bg-black text-white font-semibold' : 'text-[#8E8E93] group-hover:text-black'}">
           ${dayLetters[i]}
         </div>
 
-        <!-- Adherence Indicator Dot (Clean CSS liquid fill - zero SVG artifacts) -->
-        <div class="mt-2.5 relative flex items-center justify-center">
+        <!-- Adherence Bead Indicator -->
+        <div class="mt-2 relative flex items-center justify-center">
           <div class="adherence-dot-container">
             <div class="adherence-liquid-fill" style="height: ${fillPercent}%;"></div>
             ${isFull ? `
               <div class="adherence-dot-check">
-                <span class="material-symbols-rounded text-[18px]">check</span>
+                <span class="material-symbols-rounded text-[16px]">check</span>
               </div>
             ` : ''}
           </div>
@@ -425,7 +418,6 @@ function renderWeekCalendar() {
   if (titleEl) titleEl.textContent = formatDayHeader(appState.selectedDate);
 }
 
-// Change selected date
 window.selectDate = function(isoStr) {
   appState.selectedDate = new Date(isoStr);
   sounds.playTapSound();
@@ -453,7 +445,6 @@ function renderScheduleView() {
   const dateKey = formatDateKey(appState.selectedDate);
   const dayLogs = appState.logs[dateKey] || {};
 
-  // Group by time
   const timeSlots = {};
   appState.medications.forEach(med => {
     if (med.asNeeded) return;
@@ -477,7 +468,6 @@ function renderScheduleView() {
   const logUpcomingContainer = document.getElementById('log-upcoming-section');
   const loggedSection = document.getElementById('logged-section');
   const yourMedsContainer = document.getElementById('your-meds-list');
-  const desktopSidebarMeds = document.getElementById('desktop-cabinet-summary');
 
   let upcomingHtml = '';
   let loggedHtml = '';
@@ -497,24 +487,24 @@ function renderScheduleView() {
       }
     });
 
-    // Upcoming Doses
+    // Upcoming Doses (e.g. 12:00 PM Calcium in Screenshot 3)
     if (!allTakenOrSkipped) {
       slot.meds.forEach(med => {
         const doseId = `${med.id}_${slot.time}`;
         const log = dayLogs[doseId];
         if (!log || log.status === 'none') {
           upcomingHtml += `
-            <div class="bg-sky-50/70 border border-sky-100 rounded-2xl p-4.5 flex items-center justify-between mb-3.5 shadow-xs hover:shadow-md transition-all ios-touch">
-              <div class="flex items-center space-x-4 flex-1 cursor-pointer" onclick="openRecordedSheet('${slot.time}')">
+            <div class="ios-card-blue p-4 flex items-center justify-between mb-3 hover:border-blue-300 transition-all ios-touch">
+              <div class="flex items-center space-x-3.5 flex-1 cursor-pointer" onclick="openRecordedSheet('${slot.time}')">
                 ${renderPillAvatar(med, 'md')}
                 <div>
-                  <div class="text-xs font-bold text-gray-400 tracking-wider uppercase mb-0.5">${slot.label}</div>
-                  <div class="text-lg font-black text-gray-900 leading-snug">${med.name}</div>
-                  <div class="text-sm font-semibold text-gray-500">${med.dosage} • ${med.dosageQuantity || 1} ${med.form}</div>
+                  <div class="text-[15px] font-semibold text-[#1C1C1E] leading-snug">${slot.label}</div>
+                  <div class="text-[17px] font-medium text-[#1C1C1E] mt-0.5">${med.name}</div>
+                  <div class="text-[14px] font-normal text-[#8E8E93]">${med.dosage} • ${med.dosageQuantity || 1} ${med.form}</div>
                 </div>
               </div>
-              <button onclick="quickLogDose('${med.id}', '${slot.time}', 'taken')" class="w-11 h-11 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shadow-md active:scale-95 transition-all" title="Mark as Taken">
-                <span class="material-symbols-rounded text-2xl font-bold">add</span>
+              <button onclick="quickLogDose('${med.id}', '${slot.time}', 'taken')" class="w-9 h-9 rounded-full bg-[#007AFF] hover:bg-[#0066D6] text-white flex items-center justify-center shadow-xs active:scale-95 transition-all" title="Mark as Taken">
+                <span class="material-symbols-rounded text-xl">add</span>
               </button>
             </div>
           `;
@@ -522,15 +512,18 @@ function renderScheduleView() {
       });
     }
 
-    // Logged Doses
+    // Logged Doses (e.g. 8:00 AM in Screenshot 3 - Clean and Elegant)
     if (anyRecorded) {
       loggedHtml += `
-        <div class="bg-white rounded-2xl p-4.5 shadow-xs border border-gray-100 mb-3.5 ios-touch cursor-pointer hover:border-blue-100 transition-all" onclick="openRecordedSheet('${slot.time}')">
-          <div class="flex items-center justify-between pb-2.5 border-b border-gray-100">
-            <span class="text-base font-black text-gray-900">${slot.label}</span>
-            <span class="text-xs font-bold text-gray-400 flex items-center">Recorded <span class="material-symbols-rounded text-base ml-0.5">chevron_right</span></span>
+        <div class="ios-card p-4 mb-3 ios-touch cursor-pointer hover:border-gray-300 transition-all" onclick="openRecordedSheet('${slot.time}')">
+          <div class="flex items-center justify-between pb-2.5 border-b border-[#E5E5EA]">
+            <span class="text-[16px] font-semibold text-[#1C1C1E]">${slot.label}</span>
+            <span class="text-[14px] font-normal text-[#8E8E93] flex items-center">
+              Recorded
+              <span class="material-symbols-rounded text-base text-[#C7C7CC] ml-0.5">chevron_right</span>
+            </span>
           </div>
-          <div class="mt-3 space-y-2.5">
+          <div class="mt-2.5 space-y-2.5">
             ${slot.meds.map(med => {
               const doseId = `${med.id}_${slot.time}`;
               const log = dayLogs[doseId];
@@ -538,11 +531,10 @@ function renderScheduleView() {
               const isTaken = log.status === 'taken';
               return `
                 <div class="flex items-center space-x-3">
-                  <span class="material-symbols-rounded text-[22px] ${isTaken ? 'text-[#00C7BE]' : 'text-gray-400'}">
-                    ${isTaken ? 'check_circle' : 'cancel'}
-                  </span>
-                  <span class="text-base font-bold text-gray-800 ${isTaken ? '' : 'line-through text-gray-400'}">${med.name}</span>
-                  <span class="text-xs font-semibold text-gray-400">(${isTaken ? 'Taken' : 'Skipped'})</span>
+                  <div class="w-5 h-5 rounded-full ${isTaken ? 'bg-[#00C7BE]' : 'bg-[#8E8E93]'} text-white flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-rounded text-[13px] font-bold">${isTaken ? 'check' : 'close'}</span>
+                  </div>
+                  <span class="text-[16px] font-medium ${isTaken ? 'text-[#1C1C1E]' : 'line-through text-[#8E8E93]'}">${med.name}</span>
                 </div>
               `;
             }).join('')}
@@ -552,26 +544,26 @@ function renderScheduleView() {
     }
   });
 
-  // As Needed Row
+  // As Needed Card (Screenshot 3)
   const asNeededCard = `
-    <div class="bg-sky-50/70 border border-sky-100 rounded-2xl p-4.5 flex items-center justify-between mb-3.5 shadow-xs hover:shadow-md transition-all ios-touch cursor-pointer" onclick="openAsNeededSheet()">
-      <div class="flex items-center space-x-4">
-        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-          <span class="material-symbols-rounded text-2xl font-bold">medication</span>
+    <div class="ios-card-blue p-4 flex items-center justify-between mb-3 hover:border-blue-300 transition-all ios-touch cursor-pointer" onclick="openAsNeededSheet()">
+      <div class="flex items-center space-x-3.5">
+        <div class="w-10 h-10 rounded-full bg-blue-100/70 flex items-center justify-center text-[#007AFF]">
+          <span class="material-symbols-rounded text-xl">medication</span>
         </div>
         <div>
-          <div class="text-lg font-black text-gray-900">As Needed Medications</div>
-          <div class="text-sm font-semibold text-gray-500">Log unscheduled doses for symptoms</div>
+          <div class="text-[16px] font-semibold text-[#1C1C1E]">As Needed Medications</div>
+          <div class="text-[13px] font-normal text-[#6C6C70]">Log unscheduled doses</div>
         </div>
       </div>
-      <button class="w-11 h-11 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shadow-md active:scale-95 transition-all">
-        <span class="material-symbols-rounded text-2xl font-bold">add</span>
+      <button class="w-9 h-9 rounded-full bg-[#007AFF] hover:bg-[#0066D6] text-white flex items-center justify-center shadow-xs active:scale-95 transition-all">
+        <span class="material-symbols-rounded text-xl">add</span>
       </button>
     </div>
   `;
 
   if (logUpcomingContainer) {
-    logUpcomingContainer.innerHTML = (upcomingHtml || `<div class="bg-white rounded-2xl p-6 text-center text-base font-bold text-gray-500 border border-gray-100 mb-3.5 shadow-xs">All scheduled medications logged for this day! 🎉</div>`) + asNeededCard;
+    logUpcomingContainer.innerHTML = (upcomingHtml || `<div class="ios-card p-5 text-center text-[15px] font-medium text-[#8E8E93] mb-3">All scheduled medications logged for this day 🎉</div>`) + asNeededCard;
   }
 
   if (loggedSection) {
@@ -583,7 +575,7 @@ function renderScheduleView() {
     }
   }
 
-  // Your Medications Cards
+  // Your Medications List (Screenshot 3 & 4)
   let medsCardsHtml = '';
   appState.medications.forEach(med => {
     const scheduleText = med.asNeeded 
@@ -591,24 +583,23 @@ function renderScheduleView() {
       : (med.times && med.times.length > 0 ? med.times.map(t => t.label).join(', ') : 'Daily');
 
     medsCardsHtml += `
-      <div class="bg-white rounded-2xl p-4 shadow-xs border border-gray-100 flex items-center justify-between mb-3 ios-touch cursor-pointer hover:border-gray-200 transition-all" onclick="openReviewDetails('${med.id}')">
-        <div class="flex items-center space-x-4">
+      <div class="ios-card p-3.5 flex items-center justify-between mb-2.5 ios-touch cursor-pointer hover:border-gray-300 transition-all" onclick="openReviewDetails('${med.id}')">
+        <div class="flex items-center space-x-3.5">
           ${renderPillAvatar(med, 'md')}
           <div>
-            <div class="text-lg font-black text-gray-900 leading-tight">${med.name}</div>
-            <div class="text-sm font-semibold text-gray-500">${med.form}, ${med.dosage}</div>
-            <div class="text-sm text-blue-600 font-bold mt-0.5">${scheduleText}</div>
+            <div class="text-[16px] font-semibold text-[#1C1C1E] leading-snug">${med.name}</div>
+            <div class="text-[14px] font-normal text-[#8E8E93]">${med.form}, ${med.dosage}</div>
+            <div class="text-[13px] font-medium text-[#007AFF] mt-0.5">${scheduleText}</div>
           </div>
         </div>
-        <div class="flex items-center text-gray-400">
-          <span class="material-symbols-rounded text-2xl">chevron_right</span>
+        <div class="flex items-center text-[#C7C7CC]">
+          <span class="material-symbols-rounded text-xl">chevron_right</span>
         </div>
       </div>
     `;
   });
 
   if (yourMedsContainer) yourMedsContainer.innerHTML = medsCardsHtml;
-  if (desktopSidebarMeds) desktopSidebarMeds.innerHTML = medsCardsHtml;
 }
 
 // Quick Log dose
@@ -656,28 +647,28 @@ window.openRecordedSheet = function(timeKey) {
     const isSkipped = curStatus === 'skipped';
 
     return `
-      <div class="bg-white rounded-3xl p-5 shadow-xs border border-gray-100 mb-4 transition-all">
-        <div class="flex items-center space-x-4 mb-3">
+      <div class="ios-card p-4.5 mb-3.5 transition-all">
+        <div class="flex items-center space-x-3.5 mb-3">
           ${renderPillAvatar(med, 'lg')}
           <div>
-            <div class="text-xl font-black text-gray-900">${med.name}</div>
-            <div class="text-base font-semibold text-gray-500">${med.form}, ${med.dosage}</div>
-            <div class="text-sm text-blue-600 font-bold mt-0.5 flex items-center">
+            <div class="text-[18px] font-semibold text-[#1C1C1E] leading-snug">${med.name}</div>
+            <div class="text-[14px] font-normal text-[#8E8E93]">${med.form}, ${med.dosage}</div>
+            <div class="text-[13px] font-medium text-[#007AFF] mt-0.5 flex items-center">
               1 ${med.form.toLowerCase()} at ${timeLabel}
-              <span class="material-symbols-rounded text-base ml-0.5">chevron_right</span>
+              <span class="material-symbols-rounded text-sm ml-0.5">chevron_right</span>
             </div>
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mt-4">
+        <div class="grid grid-cols-2 gap-3 mt-3.5">
           <button onclick="toggleDoseStatus('${med.id}', '${timeKey}', 'skipped')" 
-            class="py-3.5 px-4 rounded-full font-bold text-base transition-all flex items-center justify-center space-x-1.5 ios-touch ${isSkipped ? 'bg-sky-200 text-sky-800 ring-2 ring-sky-400' : 'bg-sky-100/80 text-blue-600 hover:bg-sky-100'}">
+            class="py-3 px-4 rounded-full font-semibold text-[15px] transition-all flex items-center justify-center space-x-1.5 ios-touch ${isSkipped ? 'bg-[#CCE4F8] text-[#007AFF] ring-2 ring-[#007AFF]' : 'bg-[#E5F1FC] text-[#007AFF] hover:bg-[#D5E8FD]'}">
             <span>${isSkipped ? '✓ Skipped' : 'Skipped'}</span>
           </button>
           
           <button onclick="toggleDoseStatus('${med.id}', '${timeKey}', 'taken')" 
-            class="py-3.5 px-4 rounded-full font-bold text-base transition-all flex items-center justify-center space-x-1.5 shadow-sm ios-touch ${isTaken ? 'bg-blue-600 text-white ring-2 ring-blue-500 ring-offset-2' : 'bg-blue-500 text-white hover:bg-blue-600'}">
-            <span class="material-symbols-rounded text-lg">check</span>
+            class="py-3 px-4 rounded-full font-semibold text-[15px] transition-all flex items-center justify-center space-x-1.5 shadow-xs ios-touch ${isTaken ? 'bg-[#007AFF] text-white ring-2 ring-blue-400' : 'bg-[#007AFF] text-white hover:bg-[#0066D6]'}">
+            <span class="material-symbols-rounded text-base">check</span>
             <span>Taken</span>
           </button>
         </div>
@@ -728,61 +719,60 @@ window.openReviewDetails = function(medId) {
   const content = document.getElementById('review-details-content');
 
   const timesText = med.times && med.times.length > 0 
-    ? med.times.map(t => `<div class="flex justify-between py-2.5 border-b border-gray-200/50 last:border-none"><span class="font-bold text-gray-800 text-base">${t.label}</span><span class="text-gray-500 font-semibold text-base">${t.quantity} ${t.unit}</span></div>`).join('')
-    : '<div class="text-base font-semibold text-gray-500 py-2">No scheduled times</div>';
+    ? med.times.map(t => `<div class="flex justify-between py-2 border-b border-[#E5E5EA] last:border-none"><span class="font-medium text-[#1C1C1E] text-[15px]">${t.label}</span><span class="text-[#8E8E93] text-[15px]">${t.quantity} ${t.unit}</span></div>`).join('')
+    : '<div class="text-[14px] text-[#8E8E93] py-2">No scheduled times</div>';
 
   content.innerHTML = `
     <!-- Top Bar -->
-    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200/60 sticky top-0 bg-white/95 backdrop-blur-md z-10">
-      <button onclick="closeReviewDetails()" class="text-blue-600 font-bold flex items-center text-base ios-touch">
-        <span class="material-symbols-rounded text-2xl mr-0.5">chevron_left</span>
+    <div class="flex items-center justify-between px-5 py-3.5 border-b border-[#E5E5EA] sticky top-0 bg-white/95 backdrop-blur-md z-10">
+      <button onclick="closeReviewDetails()" class="text-[#007AFF] font-medium flex items-center text-[16px] ios-touch">
+        <span class="material-symbols-rounded text-xl mr-0.5">chevron_left</span>
         Back
       </button>
-      <span class="font-black text-gray-900 text-lg">Review Details</span>
-      <button onclick="openEditSchedule('${med.id}')" class="text-blue-600 font-bold text-base ios-touch">Edit</button>
+      <span class="font-semibold text-[#1C1C1E] text-[17px]">Review Details</span>
+      <button onclick="openEditSchedule('${med.id}')" class="text-[#007AFF] font-medium text-[16px] ios-touch">Edit</button>
     </div>
 
-    <div class="p-6 md:p-8 text-center max-w-xl mx-auto">
-      <div class="flex justify-center mb-4">
+    <div class="p-6 text-center max-w-lg mx-auto">
+      <div class="flex justify-center mb-3">
         ${renderPillAvatar(med, 'xl')}
       </div>
-      <h2 class="text-3xl font-black text-gray-900 mb-1">${med.name}</h2>
-      <p class="text-base text-gray-500 font-bold mb-6">${med.form}, ${med.dosage}</p>
+      <h2 class="text-[26px] font-bold text-[#1C1C1E] mb-0.5">${med.name}</h2>
+      <p class="text-[15px] text-[#8E8E93] font-normal mb-5">${med.form}, ${med.dosage}</p>
 
       <!-- Schedule Card -->
-      <div class="text-left mb-6">
-        <div class="text-xs font-black text-gray-400 uppercase tracking-wider mb-2 ml-1">Schedule</div>
-        <div class="bg-gray-100 rounded-3xl p-5">
-          <div class="text-base font-bold text-gray-500 mb-2">${med.frequency === 'cyclical' ? 'Cyclical Schedule' : (med.asNeeded ? 'As Needed' : 'Every Day')}</div>
+      <div class="text-left mb-5">
+        <div class="text-[12px] font-medium text-[#8E8E93] uppercase tracking-wider mb-1.5 ml-1">Schedule</div>
+        <div class="bg-[#F2F2F7] rounded-[16px] p-4">
+          <div class="text-[15px] font-medium text-[#8E8E93] mb-2">${med.frequency === 'cyclical' ? 'Cyclical Schedule' : (med.asNeeded ? 'As Needed' : 'Every Day')}</div>
           ${timesText}
         </div>
       </div>
 
       <!-- Optional Details Card -->
       <div class="text-left mb-6">
-        <div class="text-xs font-black text-gray-400 uppercase tracking-wider mb-2 ml-1">Optional Details</div>
-        <div class="bg-gray-100 rounded-3xl p-5 space-y-3.5">
+        <div class="text-[12px] font-medium text-[#8E8E93] uppercase tracking-wider mb-1.5 ml-1">Optional Details</div>
+        <div class="bg-[#F2F2F7] rounded-[16px] p-4 space-y-3">
           <div>
-            <div class="text-xs font-bold text-gray-400 uppercase">Nickname</div>
-            <div class="text-base font-bold text-gray-800">${med.nickname || 'None'}</div>
+            <div class="text-[12px] text-[#8E8E93]">Nickname</div>
+            <div class="text-[15px] font-medium text-[#1C1C1E] mt-0.5">${med.nickname || 'None'}</div>
           </div>
-          <div class="border-t border-gray-200/70 pt-2.5">
-            <div class="text-xs font-bold text-gray-400 uppercase">Notes & Instructions</div>
-            <div class="text-sm font-semibold text-gray-700 mt-0.5">${med.notes || 'No special notes'}</div>
+          <div class="border-t border-[#E5E5EA] pt-2">
+            <div class="text-[12px] text-[#8E8E93]">Notes & Instructions</div>
+            <div class="text-[14px] text-[#1C1C1E] mt-0.5">${med.notes || 'No special notes'}</div>
           </div>
-          <div class="border-t border-gray-200/70 pt-2.5 flex justify-between items-center">
-            <span class="text-xs font-bold text-gray-400 uppercase">Remaining Supply</span>
-            <span class="text-sm font-black ${med.remainingPills <= 5 ? 'text-red-500' : 'text-gray-800'}">${med.remainingPills || 0} pills left</span>
+          <div class="border-t border-[#E5E5EA] pt-2 flex justify-between items-center">
+            <span class="text-[12px] text-[#8E8E93]">Supply Remaining</span>
+            <span class="text-[14px] font-semibold ${med.remainingPills <= 5 ? 'text-red-500' : 'text-[#1C1C1E]'}">${med.remainingPills || 0} pills left</span>
           </div>
         </div>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="space-y-3">
-        <button onclick="closeReviewDetails()" class="w-full py-4 rounded-2xl bg-blue-500 hover:bg-blue-600 text-white font-black text-lg shadow-md active:scale-98 transition-all">
+      <div class="space-y-2.5">
+        <button onclick="closeReviewDetails()" class="w-full py-3.5 rounded-[14px] bg-[#007AFF] hover:bg-[#0066D6] text-white font-semibold text-[16px] shadow-sm active:scale-98 transition-all">
           Done
         </button>
-        <button onclick="deleteMedication('${med.id}')" class="w-full py-3.5 rounded-2xl bg-red-50 hover:bg-red-100 text-red-600 font-bold text-base transition-all">
+        <button onclick="deleteMedication('${med.id}')" class="w-full py-2.5 rounded-[14px] text-red-500 font-medium text-[15px] hover:bg-red-50 transition-all">
           Delete Medication
         </button>
       </div>
@@ -823,104 +813,105 @@ window.openEditSchedule = function(medId = null) {
 
   sheet.innerHTML = `
     <!-- Top Navigation Bar -->
-    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 sticky top-0 bg-white/95 backdrop-blur z-10">
-      <button onclick="closeEditSchedule()" class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-700 hover:bg-gray-200 transition-all">
-        <span class="material-symbols-rounded text-xl">close</span>
+    <div class="flex items-center justify-between px-5 py-3.5 border-b border-[#E5E5EA] sticky top-0 bg-white/95 backdrop-blur z-10">
+      <button onclick="closeEditSchedule()" class="w-8 h-8 rounded-full bg-[#E5E5EA] flex items-center justify-center text-[#1C1C1E] hover:bg-gray-300 transition-all">
+        <span class="material-symbols-rounded text-lg">close</span>
       </button>
-      <span class="font-black text-gray-900 text-lg">Edit Schedule</span>
-      <button onclick="saveScheduleChanges()" class="w-9 h-9 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shadow-md transition-all">
-        <span class="material-symbols-rounded text-xl">check</span>
+      <span class="font-semibold text-[#1C1C1E] text-[17px]">Edit Schedule</span>
+      <button onclick="saveScheduleChanges()" class="w-8 h-8 rounded-full bg-[#007AFF] hover:bg-[#0066D6] text-white flex items-center justify-center shadow-xs transition-all">
+        <span class="material-symbols-rounded text-lg">check</span>
       </button>
     </div>
 
-    <div class="p-6 md:p-8 space-y-6 max-h-[85vh] overflow-y-auto no-scrollbar max-w-xl mx-auto pb-16">
+    <div class="p-5 space-y-5 max-h-[85vh] overflow-y-auto no-scrollbar max-w-lg mx-auto pb-14">
       
       <!-- When will you take this? -->
       <div>
-        <div class="text-base font-black text-gray-600 mb-2">When will you take this?</div>
-        <div class="bg-gray-100 rounded-3xl overflow-hidden divide-y divide-gray-200/70">
-          <div class="p-4.5 flex items-center justify-between">
-            <span class="text-base font-bold text-gray-800">Schedule Type</span>
-            <select id="schedule-freq-select" onchange="toggleCycleSection(this.value)" class="bg-transparent text-base font-black text-blue-600 outline-none cursor-pointer">
+        <div class="text-[13px] font-medium text-[#8E8E93] mb-1.5 ml-1">When will you take this?</div>
+        <div class="bg-[#F2F2F7] rounded-[16px] overflow-hidden divide-y divide-[#E5E5EA]">
+          <div class="p-3.5 flex items-center justify-between">
+            <span class="text-[15px] font-normal text-[#1C1C1E]">Schedule Type</span>
+            <select id="schedule-freq-select" onchange="toggleCycleSection(this.value)" class="bg-transparent text-[15px] font-medium text-[#007AFF] outline-none cursor-pointer">
               <option value="every_day" ${!isCyclical && !med?.asNeeded ? 'selected' : ''}>Every Day</option>
               <option value="cyclical" ${isCyclical ? 'selected' : ''}>On a Cyclical Schedule</option>
               <option value="as_needed" ${med?.asNeeded ? 'selected' : ''}>As Needed</option>
             </select>
           </div>
-          <div class="p-4.5 flex items-center justify-between">
-            <span class="text-base font-bold text-gray-800">Frequency Interval</span>
-            <span class="text-base font-black text-blue-600 flex items-center cursor-pointer">
-              Every Day <span class="material-symbols-rounded text-lg ml-1">unfold_more</span>
+          <div class="p-3.5 flex items-center justify-between">
+            <span class="text-[15px] font-normal text-[#1C1C1E]">Frequency</span>
+            <span class="text-[15px] font-medium text-[#007AFF] flex items-center cursor-pointer">
+              Day <span class="material-symbols-rounded text-base ml-0.5">unfold_more</span>
             </span>
           </div>
         </div>
       </div>
 
-      <!-- At what time? -->
+      <!-- At what time? (Screenshot 1) -->
       <div>
-        <div class="text-base font-black text-gray-600 mb-2">At what time?</div>
-        <div class="bg-gray-100 rounded-3xl p-4">
-          <div id="times-list-rows" class="space-y-3">
+        <div class="text-[13px] font-medium text-[#8E8E93] mb-1.5 ml-1">At what time?</div>
+        <div class="bg-[#F2F2F7] rounded-[16px] p-3">
+          <div id="times-list-rows" class="space-y-2">
             ${currentTimes.map((t, idx) => `
-              <div class="flex items-center justify-between p-3 rounded-2xl bg-white shadow-xs" data-time-row="${idx}">
-                <div class="flex items-center space-x-3">
-                  <button type="button" onclick="removeTimeRow(${idx})" class="w-7 h-7 rounded-full bg-red-500 text-white flex items-center justify-center flex-shrink-0">
-                    <span class="material-symbols-rounded text-base">remove</span>
+              <div class="flex items-center justify-between p-2 rounded-xl bg-white shadow-xs" data-time-row="${idx}">
+                <div class="flex items-center space-x-2.5">
+                  <button type="button" onclick="removeTimeRow(${idx})" class="w-6 h-6 rounded-full bg-[#FF3B30] text-white flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-rounded text-sm">remove</span>
                   </button>
-                  <input type="time" value="${t.time}" class="px-3 py-1.5 bg-gray-100 rounded-xl text-base font-black text-gray-900 outline-none focus:ring-2 focus:ring-blue-500" />
+                  <input type="time" value="${t.time}" class="px-2.5 py-1 bg-gray-100 rounded-lg text-[15px] font-medium text-[#1C1C1E] outline-none" />
                 </div>
-                <div class="flex items-center space-x-2">
-                  <input type="number" min="1" max="10" value="${t.quantity || 1}" class="w-14 py-1.5 px-2 text-center text-base font-black text-blue-600 bg-blue-50 rounded-xl outline-none" />
-                  <span class="text-sm text-blue-600 font-bold">${t.unit || 'dose'}</span>
+                <div class="flex items-center space-x-1.5">
+                  <input type="number" min="1" max="10" value="${t.quantity || 1}" class="w-10 py-1 text-center text-[14px] font-semibold text-[#007AFF] bg-blue-50 rounded-lg outline-none" />
+                  <span class="text-[13px] text-[#007AFF] font-medium">${t.unit || 'capsules'}</span>
                 </div>
               </div>
             `).join('')}
           </div>
 
-          <button type="button" onclick="addTimeRow()" class="mt-4 flex items-center space-x-2 text-base font-black text-blue-600 hover:text-blue-700 py-1.5 px-2">
-            <span class="w-7 h-7 rounded-full bg-green-500 text-white flex items-center justify-center">
-              <span class="material-symbols-rounded text-base font-bold">add</span>
+          <button type="button" onclick="addTimeRow()" class="mt-3 flex items-center space-x-2 text-[15px] font-medium text-[#007AFF] hover:opacity-80 py-1 px-1">
+            <span class="w-6 h-6 rounded-full bg-[#34C759] text-white flex items-center justify-center">
+              <span class="material-symbols-rounded text-sm">add</span>
             </span>
             <span>Add a Time</span>
           </button>
         </div>
-        <p class="text-xs text-gray-400 mt-2.5 px-1 font-semibold">If you schedule a time, Medication Reminder will notify you when it's time to take your doses.</p>
+        <p class="text-[12px] text-[#8E8E93] mt-2 px-1">If you schedule a time, Health will send you a notification to take your medications.</p>
       </div>
 
       <!-- What is the cycle? -->
       <div id="cycle-settings-box" class="${isCyclical ? 'block' : 'hidden'}">
-        <div class="text-base font-black text-gray-600 mb-2">What is the cycle?</div>
-        <div class="bg-gray-100 rounded-3xl overflow-hidden divide-y divide-gray-200/70">
-          <div class="p-4.5 flex items-center justify-between">
-            <span class="text-base font-bold text-gray-800">Use for</span>
-            <span class="text-base font-black text-blue-600 flex items-center">
-              21 days <span class="material-symbols-rounded text-lg ml-1">unfold_more</span>
+        <div class="text-[13px] font-medium text-[#8E8E93] mb-1.5 ml-1">What is the cycle?</div>
+        <div class="bg-[#F2F2F7] rounded-[16px] overflow-hidden divide-y divide-[#E5E5EA]">
+          <div class="p-3.5 flex items-center justify-between">
+            <span class="text-[15px] font-normal text-[#1C1C1E]">Use for</span>
+            <span class="text-[15px] font-medium text-[#007AFF] flex items-center">
+              21 days <span class="material-symbols-rounded text-base ml-0.5">unfold_more</span>
             </span>
           </div>
-          <div class="p-4.5 flex items-center justify-between">
-            <span class="text-base font-bold text-gray-800">Pause for</span>
-            <span class="text-base font-black text-blue-600 flex items-center">
-              7 days <span class="material-symbols-rounded text-lg ml-1">unfold_more</span>
+          <div class="p-3.5 flex items-center justify-between">
+            <span class="text-[15px] font-normal text-[#1C1C1E]">Pause for</span>
+            <span class="text-[15px] font-medium text-[#007AFF] flex items-center">
+              7 days <span class="material-symbols-rounded text-base ml-0.5">unfold_more</span>
             </span>
           </div>
         </div>
-        <div class="text-xs text-gray-400 mt-2 px-1 font-bold">Next Pause: May 12</div>
+        <div class="text-[12px] text-[#8E8E93] mt-1.5 px-1 font-normal">Next Pause: April 22</div>
       </div>
 
       <!-- Duration -->
       <div>
-        <div class="text-base font-black text-gray-600 mb-2">Duration</div>
-        <div class="bg-gray-100 rounded-3xl p-5">
+        <div class="text-[13px] font-medium text-[#8E8E93] mb-1.5 ml-1">Duration</div>
+        <div class="bg-[#F2F2F7] rounded-[16px] p-4">
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <div class="text-xs font-black text-gray-400 uppercase tracking-wide">START DATE</div>
-              <div class="text-base font-black text-gray-900 mt-1">Today</div>
+              <div class="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wide">START DATE</div>
+              <div class="text-[15px] font-medium text-[#1C1C1E] mt-0.5">April 1 (Today)</div>
             </div>
             <div>
-              <div class="text-xs font-black text-gray-400 uppercase tracking-wide">END DATE</div>
-              <div class="text-base font-bold text-gray-500 mt-1">None</div>
+              <div class="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wide">END DATE</div>
+              <div class="text-[15px] font-normal text-[#8E8E93] mt-0.5">None</div>
             </div>
           </div>
+          <button class="mt-2.5 text-[14px] font-medium text-[#007AFF]">Edit</button>
         </div>
       </div>
 
@@ -943,18 +934,18 @@ window.addTimeRow = function() {
   const container = document.getElementById('times-list-rows');
   const count = container.children.length;
   const newRow = document.createElement('div');
-  newRow.className = 'flex items-center justify-between p-3 rounded-2xl bg-white shadow-xs';
+  newRow.className = 'flex items-center justify-between p-2 rounded-xl bg-white shadow-xs';
   newRow.setAttribute('data-time-row', count);
   newRow.innerHTML = `
-    <div class="flex items-center space-x-3">
-      <button type="button" onclick="this.parentElement.parentElement.remove()" class="w-7 h-7 rounded-full bg-red-500 text-white flex items-center justify-center flex-shrink-0">
-        <span class="material-symbols-rounded text-base">remove</span>
+    <div class="flex items-center space-x-2.5">
+      <button type="button" onclick="this.parentElement.parentElement.remove()" class="w-6 h-6 rounded-full bg-[#FF3B30] text-white flex items-center justify-center flex-shrink-0">
+        <span class="material-symbols-rounded text-sm">remove</span>
       </button>
-      <input type="time" value="20:00" class="px-3 py-1.5 bg-gray-100 rounded-xl text-base font-black text-gray-900 outline-none focus:ring-2 focus:ring-blue-500" />
+      <input type="time" value="20:00" class="px-2.5 py-1 bg-gray-100 rounded-lg text-[15px] font-medium text-[#1C1C1E] outline-none" />
     </div>
-    <div class="flex items-center space-x-2">
-      <input type="number" min="1" max="10" value="1" class="w-14 py-1.5 px-2 text-center text-base font-black text-blue-600 bg-blue-50 rounded-xl outline-none" />
-      <span class="text-sm text-blue-600 font-bold">dose</span>
+    <div class="flex items-center space-x-1.5">
+      <input type="number" min="1" max="10" value="1" class="w-10 py-1 text-center text-[14px] font-semibold text-[#007AFF] bg-blue-50 rounded-lg outline-none" />
+      <span class="text-[13px] text-[#007AFF] font-medium">dose</span>
     </div>
   `;
   container.appendChild(newRow);
@@ -1008,7 +999,7 @@ window.closeEditSchedule = function() {
   if (editingMedId) openReviewDetails(editingMedId);
 };
 
-// --- As Needed (PRN) Medications Sheet ---
+// --- As Needed Sheet ---
 window.openAsNeededSheet = function() {
   const modal = document.getElementById('as-needed-modal');
   const list = document.getElementById('as-needed-list');
@@ -1016,16 +1007,16 @@ window.openAsNeededSheet = function() {
   const prnMeds = appState.medications.filter(m => m.asNeeded || m.id === 'med_ibuprofen');
 
   list.innerHTML = prnMeds.map(med => `
-    <div class="bg-gray-50 rounded-2xl p-4.5 flex items-center justify-between mb-3 border border-gray-100 hover:border-blue-200 transition-all ios-touch">
-      <div class="flex items-center space-x-4">
+    <div class="ios-card p-3.5 flex items-center justify-between mb-2.5 border border-black/[0.04] hover:border-blue-200 transition-all ios-touch">
+      <div class="flex items-center space-x-3.5">
         ${renderPillAvatar(med, 'md')}
         <div>
-          <div class="text-lg font-black text-gray-900">${med.name}</div>
-          <div class="text-sm font-semibold text-gray-500">${med.dosage} • ${med.nickname || 'As Needed'}</div>
+          <div class="text-[16px] font-semibold text-[#1C1C1E]">${med.name}</div>
+          <div class="text-[13px] font-normal text-[#8E8E93]">${med.dosage} • ${med.nickname || 'As Needed'}</div>
         </div>
       </div>
-      <button onclick="logAsNeededDose('${med.id}')" class="px-5 py-2.5 rounded-full bg-blue-500 hover:bg-blue-600 text-white font-black text-sm shadow-sm flex items-center space-x-1.5">
-        <span class="material-symbols-rounded text-base font-bold">add</span>
+      <button onclick="logAsNeededDose('${med.id}')" class="px-4 py-2 rounded-full bg-[#007AFF] hover:bg-[#0066D6] text-white font-medium text-[14px] shadow-xs flex items-center space-x-1">
+        <span class="material-symbols-rounded text-base">add</span>
         <span>Take Now</span>
       </button>
     </div>
@@ -1062,7 +1053,7 @@ window.closeAsNeededSheet = function() {
   document.body.classList.remove('overflow-hidden');
 };
 
-// --- REDESIGNED: Add New Medication Experience ---
+// --- Add New Medication ---
 let newMedDraft = {
   name: '',
   form: 'Tablet',
@@ -1102,11 +1093,9 @@ window.openAddMedicationModal = function() {
     totalPills: 30
   };
 
-  // Render presets
   renderAddMedPresets();
   updateAddMedPreview();
 
-  // Reset form inputs
   document.getElementById('new-med-name').value = '';
   document.getElementById('new-med-dosage').value = '50';
   document.getElementById('new-med-unit').value = 'mg';
@@ -1125,7 +1114,7 @@ function renderAddMedPresets() {
   if (!container) return;
 
   container.innerHTML = COMMON_PRESETS.map((p, idx) => `
-    <button type="button" onclick="applyMedPreset(${idx})" class="px-3.5 py-1.5 rounded-full bg-gray-100 hover:bg-blue-50 hover:text-blue-600 text-sm font-bold text-gray-700 transition-all border border-gray-200/60 flex-shrink-0 active:scale-95">
+    <button type="button" onclick="applyMedPreset(${idx})" class="px-3 py-1 rounded-full bg-gray-100 hover:bg-blue-50 text-[13px] font-medium text-gray-700 transition-all border border-gray-200/50 flex-shrink-0 active:scale-95">
       ${p.name}
     </button>
   `).join('');
@@ -1167,14 +1156,13 @@ window.updateAddMedPreview = function() {
 
 window.setDraftPillShape = function(shape) {
   newMedDraft.shape = shape;
-  newMedDraft.form = shape === 'capsule' ? 'Capsule' : (shape === 'liquid' ? 'Liquid' : (shape === 'inhaler' ? 'Inhaler' : 'Tablet'));
+  newMedDraft.form = shape === 'capsule' ? 'Capsule' : (shape === 'liquid' ? 'Liquid' : 'Tablet');
   
-  // Highlight shape buttons
   document.querySelectorAll('.shape-btn').forEach(b => {
-    b.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50');
+    b.classList.remove('ring-2', 'ring-[#007AFF]', 'bg-blue-50');
   });
   const activeBtn = document.getElementById(`shape-btn-${shape}`);
-  if (activeBtn) activeBtn.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50');
+  if (activeBtn) activeBtn.classList.add('ring-2', 'ring-[#007AFF]', 'bg-blue-50');
 
   updateAddMedPreview();
 };
@@ -1189,13 +1177,13 @@ window.setDraftColor = function(bg, pill, sec) {
 window.setMealInstruction = function(meal) {
   newMedDraft.mealInstruction = meal;
   document.querySelectorAll('.meal-btn').forEach(b => {
-    b.classList.remove('bg-blue-500', 'text-white');
+    b.classList.remove('bg-[#007AFF]', 'text-white');
     b.classList.add('bg-gray-100', 'text-gray-700');
   });
   const activeBtn = document.getElementById(`meal-btn-${meal}`);
   if (activeBtn) {
     activeBtn.classList.remove('bg-gray-100', 'text-gray-700');
-    activeBtn.classList.add('bg-blue-500', 'text-white');
+    activeBtn.classList.add('bg-[#007AFF]', 'text-white');
   }
 };
 
@@ -1263,38 +1251,35 @@ window.closeAddMedicationModal = function() {
   document.body.classList.remove('overflow-hidden');
 };
 
-// --- Switch Tabs (Schedule / Summary / Sharing) ---
+// --- Tab Switching ---
 window.switchTab = function(tabName) {
   appState.activeTab = tabName;
   sounds.playTapSound();
 
   const tabs = ['browse_meds', 'summary', 'sharing'];
   tabs.forEach(t => {
-    // Mobile bottom bar buttons
     const mBtn = document.getElementById(`tab-btn-${t}`);
-    // Desktop top nav buttons
     const dBtn = document.getElementById(`dtab-btn-${t}`);
     const view = document.getElementById(`view-${t}`);
-
     const isActive = t === tabName;
 
     if (mBtn) {
       if (isActive) {
-        mBtn.classList.add('text-blue-600', 'font-black');
-        mBtn.classList.remove('text-gray-400', 'font-bold');
+        mBtn.classList.add('text-[#007AFF]', 'font-semibold');
+        mBtn.classList.remove('text-[#8E8E93]', 'font-normal');
       } else {
-        mBtn.classList.remove('text-blue-600', 'font-black');
-        mBtn.classList.add('text-gray-400', 'font-bold');
+        mBtn.classList.remove('text-[#007AFF]', 'font-semibold');
+        mBtn.classList.add('text-[#8E8E93]', 'font-normal');
       }
     }
 
     if (dBtn) {
       if (isActive) {
-        dBtn.classList.add('bg-white', 'text-blue-600', 'shadow-xs');
-        dBtn.classList.remove('text-gray-600', 'hover:bg-gray-100');
+        dBtn.classList.add('bg-white', 'text-[#007AFF]', 'shadow-xs');
+        dBtn.classList.remove('text-[#8E8E93]', 'hover:text-black');
       } else {
-        dBtn.classList.remove('bg-white', 'text-blue-600', 'shadow-xs');
-        dBtn.classList.add('text-gray-600', 'hover:bg-gray-100');
+        dBtn.classList.remove('bg-white', 'text-[#007AFF]', 'shadow-xs');
+        dBtn.classList.add('text-[#8E8E93]', 'hover:text-black');
       }
     }
 
@@ -1308,12 +1293,11 @@ window.switchTab = function(tabName) {
   if (tabName === 'sharing') renderSharingView();
 };
 
-// --- Summary & Fixed Weekly Consistency Report ---
+// --- Summary Stats ---
 function renderSummaryStats() {
   const container = document.getElementById('summary-stats-content');
   if (!container) return;
 
-  // Calculate past 7 days adherence accurately
   let totalDosesPast7Days = 0;
   let takenDosesPast7Days = 0;
   const daysData = [];
@@ -1323,11 +1307,9 @@ function renderSummaryStats() {
     d.setDate(d.getDate() - i);
     const adh = getDayAdherence(d);
     daysData.push({
-      dayName: d.toLocaleDateString('en-US', { weekday: 'short' }),
+      dayName: d.toLocaleDateString('en-US', { weekday: 'narrow' }),
       dateFormatted: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      percent: adh.percent,
-      taken: adh.taken,
-      total: adh.total
+      percent: adh.percent
     });
     totalDosesPast7Days += adh.total;
     takenDosesPast7Days += adh.taken;
@@ -1338,69 +1320,58 @@ function renderSummaryStats() {
     : 100;
 
   container.innerHTML = `
-    <!-- Top Overall Adherence Banner -->
-    <div class="bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600 text-white rounded-3xl p-7 shadow-lg mb-8">
-      <div class="flex items-center justify-between mb-4">
-        <span class="text-sm uppercase tracking-wider text-blue-100 font-black">7-Day Adherence</span>
-        <span class="bg-white/25 backdrop-blur px-3 py-1 rounded-full text-xs font-black">Streak Active</span>
+    <div class="ios-card p-6 mb-5">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-[12px] uppercase tracking-wider text-[#8E8E93] font-semibold">Weekly Adherence</span>
+        <span class="bg-[#EEF7FE] text-[#007AFF] px-2.5 py-0.5 rounded-full text-[12px] font-semibold">Active Streak</span>
       </div>
-      <div class="flex items-baseline space-x-3">
-        <span class="text-6xl font-black">${overallRate}%</span>
-        <span class="text-blue-100 text-lg font-bold">compliance</span>
+      <div class="flex items-baseline space-x-2">
+        <span class="text-[44px] font-bold text-[#1C1C1E] leading-none">${overallRate}%</span>
+        <span class="text-[#8E8E93] text-[15px] font-normal">on time</span>
       </div>
-      <p class="text-base text-blue-50 mt-3 font-semibold leading-relaxed">You've logged ${takenDosesPast7Days} of ${totalDosesPast7Days} scheduled doses across the past 7 days.</p>
+      <p class="text-[14px] text-[#8E8E93] mt-2 font-normal">You've logged ${takenDosesPast7Days} of ${totalDosesPast7Days} scheduled doses this week.</p>
     </div>
 
-    <!-- Fixed Weekly Consistency Chart (No SVG overflow glitches) -->
-    <div class="bg-white rounded-3xl p-6 md:p-8 shadow-xs border border-gray-100 mb-8">
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <h3 class="text-xl font-black text-gray-900">Weekly Adherence Breakdown</h3>
-          <p class="text-sm font-semibold text-gray-400">Daily dose completion percentage</p>
-        </div>
-        <span class="text-sm font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">Target: 80%+</span>
+    <!-- Weekly Adherence Breakdown -->
+    <div class="ios-card p-6 mb-5">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-[18px] font-semibold text-[#1C1C1E]">Daily Consistency</h3>
+        <span class="text-[12px] font-medium text-[#007AFF]">Past 7 Days</span>
       </div>
 
-      <!-- Bar Chart -->
-      <div class="grid grid-cols-7 gap-2 md:gap-4 items-end h-48 pt-6 pb-2 border-b border-gray-100">
+      <div class="flex items-end justify-between h-36 pt-4 pb-2 border-b border-[#E5E5EA]">
         ${daysData.map(d => {
-          const heightPercent = Math.max(12, d.percent);
-          const barColor = d.percent >= 80 ? 'bg-[#00C7BE]' : (d.percent > 0 ? 'bg-amber-400' : 'bg-gray-200');
+          const heightPercent = Math.max(10, d.percent);
+          const barColor = d.percent >= 80 ? 'bg-[#00C7BE]' : (d.percent > 0 ? 'bg-[#FF9500]' : 'bg-[#E5E5EA]');
           return `
-            <div class="flex flex-col items-center h-full justify-end group cursor-pointer">
-              <span class="text-xs font-black text-gray-500 mb-1 opacity-0 group-hover:opacity-100 transition-opacity">${d.percent}%</span>
-              <div class="w-full max-w-[42px] bg-gray-100 rounded-2xl flex flex-col justify-end overflow-hidden h-36">
-                <div class="w-full ${barColor} rounded-2xl transition-all duration-500" style="height: ${heightPercent}%;"></div>
+            <div class="flex flex-col items-center flex-1 h-full justify-end group">
+              <div class="w-7 bg-[#F2F2F7] rounded-full flex flex-col justify-end overflow-hidden h-24">
+                <div class="w-full ${barColor} rounded-full transition-all duration-300" style="height: ${heightPercent}%;"></div>
               </div>
-              <span class="text-xs md:text-sm font-bold text-gray-600 mt-2">${d.dayName}</span>
+              <span class="text-[12px] font-medium text-[#8E8E93] mt-2">${d.dayName}</span>
             </div>
           `;
         }).join('')}
       </div>
-      <div class="flex items-center justify-center space-x-6 mt-4 text-xs font-bold text-gray-500">
-        <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-[#00C7BE] mr-1.5"></span> 100% Completed</span>
-        <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-amber-400 mr-1.5"></span> Partial</span>
-        <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-gray-200 mr-1.5"></span> Missed / Empty</span>
-      </div>
     </div>
 
-    <!-- Active Medications & Refill Inventory -->
-    <div class="bg-white rounded-3xl p-6 md:p-8 shadow-xs border border-gray-100 mb-8">
-      <div class="flex items-center justify-between mb-5">
-        <h3 class="text-xl font-black text-gray-900">Cabinet & Refill Tracker</h3>
-        <span class="text-xs font-bold text-gray-400">${appState.medications.length} Prescriptions</span>
+    <!-- Cabinet Tracker -->
+    <div class="ios-card p-6">
+      <div class="flex items-center justify-between mb-3.5">
+        <h3 class="text-[18px] font-semibold text-[#1C1C1E]">Cabinet Supply</h3>
+        <span class="text-[13px] text-[#8E8E93]">${appState.medications.length} Prescriptions</span>
       </div>
-      <div class="space-y-4">
+      <div class="space-y-3">
         ${appState.medications.map(m => `
-          <div class="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-100">
-            <div class="flex items-center space-x-4">
+          <div class="flex items-center justify-between py-2 border-b border-[#E5E5EA] last:border-none">
+            <div class="flex items-center space-x-3">
               ${renderPillAvatar(m, 'sm')}
               <div>
-                <div class="text-base font-black text-gray-800">${m.name}</div>
-                <div class="text-sm font-semibold text-gray-500">${m.dosage} • ${m.form}</div>
+                <div class="text-[15px] font-medium text-[#1C1C1E]">${m.name}</div>
+                <div class="text-[13px] text-[#8E8E93]">${m.dosage} • ${m.form}</div>
               </div>
             </div>
-            <span class="text-sm font-black px-3 py-1.5 rounded-xl ${m.remainingPills <= 7 ? 'bg-red-100 text-red-600' : 'bg-white border border-gray-200 text-gray-700'}">
+            <span class="text-[13px] font-semibold px-2.5 py-1 rounded-lg ${m.remainingPills <= 7 ? 'bg-red-50 text-red-500' : 'bg-gray-100 text-[#1C1C1E]'}">
               ${m.remainingPills || 0} pills left
             </span>
           </div>
@@ -1410,50 +1381,48 @@ function renderSummaryStats() {
   `;
 }
 
-// --- Sharing / Medical ID View ---
+// --- Sharing View ---
 function renderSharingView() {
   const container = document.getElementById('sharing-view-content');
   if (!container) return;
 
   container.innerHTML = `
-    <div class="max-w-2xl mx-auto space-y-6">
-      <!-- Medical ID Card -->
-      <div class="bg-white rounded-3xl p-6 md:p-8 shadow-xs border border-gray-100">
-        <div class="flex items-center space-x-4 mb-6">
-          <div class="w-14 h-14 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-2xl">
+    <div class="space-y-5 max-w-lg mx-auto">
+      <div class="ios-card p-6">
+        <div class="flex items-center space-x-3.5 mb-5">
+          <div class="w-12 h-12 rounded-full bg-red-100 text-[#FF3B30] flex items-center justify-center font-bold text-xl">
             <span class="material-symbols-rounded">medical_information</span>
           </div>
           <div>
-            <h3 class="text-2xl font-black text-gray-900">${appState.profile.name}</h3>
-            <p class="text-sm font-bold text-gray-400">DOB: ${appState.profile.dob} • Blood Type: ${appState.profile.bloodType}</p>
+            <h3 class="text-[20px] font-bold text-[#1C1C1E] leading-tight">${appState.profile.name}</h3>
+            <p class="text-[13px] text-[#8E8E93]">DOB: ${appState.profile.dob} • Blood: ${appState.profile.bloodType}</p>
           </div>
         </div>
 
-        <div class="bg-red-50 border border-red-100 rounded-2xl p-4 mb-6">
-          <div class="text-xs font-black text-red-700 uppercase tracking-wide">Known Allergies & Adverse Reactions</div>
-          <div class="text-base text-red-950 font-bold mt-1">${appState.profile.allergies}</div>
+        <div class="bg-[#FFF2F2] border border-[#FFD8D8] rounded-[14px] p-3.5 mb-5">
+          <div class="text-[11px] font-semibold text-[#FF3B30] uppercase tracking-wide">Allergies</div>
+          <div class="text-[14px] text-[#1C1C1E] font-medium mt-0.5">${appState.profile.allergies}</div>
         </div>
 
-        <div class="text-xs font-black text-gray-400 uppercase tracking-wider mb-3">Active Medications Schedule (${appState.medications.length})</div>
-        <div class="space-y-3 mb-6">
+        <div class="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider mb-2">Prescriptions (${appState.medications.length})</div>
+        <div class="space-y-2 mb-5">
           ${appState.medications.map(m => `
-            <div class="flex items-center justify-between text-sm py-2 border-b border-gray-100 last:border-none">
-              <span class="font-black text-gray-800 text-base">${m.name} (${m.dosage})</span>
-              <span class="text-gray-500 font-bold">${m.times?.map(t => t.label).join(', ') || 'PRN / As Needed'}</span>
+            <div class="flex items-center justify-between text-[14px] py-1.5 border-b border-[#E5E5EA] last:border-none">
+              <span class="font-medium text-[#1C1C1E]">${m.name} (${m.dosage})</span>
+              <span class="text-[#8E8E93]">${m.times?.map(t => t.label).join(', ') || 'PRN'}</span>
             </div>
           `).join('')}
         </div>
 
-        <button onclick="exportMedicationListJSON()" class="w-full py-4 rounded-2xl bg-blue-500 hover:bg-blue-600 text-white font-black text-base shadow-md transition-all flex items-center justify-center space-x-2">
-          <span class="material-symbols-rounded text-xl">share</span>
+        <button onclick="exportMedicationListJSON()" class="w-full py-3.5 rounded-[14px] bg-[#007AFF] hover:bg-[#0066D6] text-white font-medium text-[15px] shadow-xs flex items-center justify-center space-x-2 transition-all">
+          <span class="material-symbols-rounded text-lg">share</span>
           <span>Export Medical Report (JSON)</span>
         </button>
       </div>
 
-      <!-- Data Reset & Demo Tools -->
-      <div class="bg-white rounded-3xl p-6 shadow-xs border border-gray-100 space-y-4">
-        <div class="text-base font-black text-gray-900">Application Data Management</div>
-        <button onclick="resetToSampleData()" class="w-full py-3.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-sm transition-all">
+      <div class="ios-card p-5 space-y-3">
+        <div class="text-[15px] font-semibold text-[#1C1C1E]">Data Tools</div>
+        <button onclick="resetToSampleData()" class="w-full py-2.5 rounded-[12px] bg-[#F2F2F7] hover:bg-gray-200 text-[#1C1C1E] font-medium text-[14px] transition-all">
           Reset to Apple Health Demo Data
         </button>
       </div>
@@ -1461,7 +1430,6 @@ function renderSharingView() {
   `;
 }
 
-// Export & Reset
 window.exportMedicationListJSON = function() {
   const exportPayload = {
     exportedAt: new Date().toISOString(),
@@ -1473,7 +1441,7 @@ window.exportMedicationListJSON = function() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `Medication_Reminder_Export_${formatDateKey(new Date())}.json`;
+  a.download = `Medication_Reminder_${formatDateKey(new Date())}.json`;
   a.click();
   URL.revokeObjectURL(url);
 };
@@ -1486,7 +1454,6 @@ window.resetToSampleData = function() {
   }
 };
 
-// --- Master Render Function ---
 function renderApp() {
   renderWeekCalendar();
   renderScheduleView();
@@ -1494,7 +1461,6 @@ function renderApp() {
   if (appState.activeTab === 'sharing') renderSharingView();
 }
 
-// Bootstrap
 document.addEventListener('DOMContentLoaded', () => {
   loadData();
   renderApp();
