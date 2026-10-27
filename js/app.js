@@ -1,6 +1,6 @@
 /**
  * Medication Reminder - Apple HIG & Material 3 Hybrid
- * Client-Side Application for GitHub Pages
+ * Client-Side Application for GitHub Pages with Smooth Transitions
  */
 
 const STORAGE_KEYS = {
@@ -287,7 +287,27 @@ function getStartOfWeek(date) {
   return new Date(d.setDate(diff));
 }
 
-// --- Render 3D Pill Graphics (HIG Proportionate) ---
+// --- Floating Toast Pill Notification ---
+function showToast(message, subtitle = '', icon = 'check_circle') {
+  const toast = document.getElementById('ios-toast-pill');
+  if (!toast) return;
+
+  const iconEl = toast.querySelector('.toast-icon');
+  const textEl = toast.querySelector('.toast-text');
+  const subEl = toast.querySelector('.toast-sub');
+
+  if (iconEl) iconEl.textContent = icon;
+  if (textEl) textEl.textContent = message;
+  if (subEl) subEl.textContent = subtitle;
+
+  toast.classList.add('show');
+  clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2300);
+}
+
+// --- Render 3D Pill Graphics ---
 function renderPillAvatar(med, size = 'md') {
   const sizeMap = {
     sm: { container: 'w-10 h-10', capsuleW: 'w-7 h-3.5', round: 'w-5 h-5' },
@@ -320,7 +340,6 @@ function renderPillAvatar(med, size = 'md') {
       <span class="material-symbols-rounded text-2xl text-blue-500 drop-shadow-sm">water_drop</span>
     `;
   } else {
-    // Round Tablet
     pillHtml = `
       <div class="tablet-3d ${dim.round}" style="background: radial-gradient(circle at 35% 35%, #ffffff 0%, ${pillCol} 70%);"></div>
     `;
@@ -366,7 +385,7 @@ function getDayAdherence(date) {
   return { status: 'empty', percent: 0, taken: 0, total: totalScheduled };
 }
 
-// --- Render Week Strip (Clean Apple HIG Layout) ---
+// --- Render Week Strip ---
 function renderWeekCalendar() {
   const weekContainer = document.getElementById('week-calendar-strip');
   if (!weekContainer) return;
@@ -387,17 +406,14 @@ function renderWeekCalendar() {
 
     html += `
       <div class="flex flex-col items-center flex-1 cursor-pointer select-none group py-0.5" onclick="selectDate('${curDate.toISOString()}')">
-        <!-- Small Inverted Caret Indicator for Selected Day -->
         <div class="h-3 flex items-center justify-center mb-1">
-          ${isSelected ? `<span class="text-[9px] text-[#1C1C1E]">▼</span>` : '<span class="text-[9px] opacity-0">▼</span>'}
+          ${isSelected ? `<span class="text-[9px] text-[#1C1C1E] transition-transform duration-200">▼</span>` : '<span class="text-[9px] opacity-0">▼</span>'}
         </div>
         
-        <!-- Day Letter Bubble -->
-        <div class="w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-medium transition-all ${isSelected ? 'bg-black text-white font-semibold' : 'text-[#8E8E93] group-hover:text-black'}">
+        <div class="w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-medium transition-all duration-200 ${isSelected ? 'bg-black text-white font-semibold shadow-xs scale-105' : 'text-[#8E8E93] group-hover:text-black'}">
           ${dayLetters[i]}
         </div>
 
-        <!-- Adherence Bead Indicator -->
         <div class="mt-2 relative flex items-center justify-center">
           <div class="adherence-dot-container">
             <div class="adherence-liquid-fill" style="height: ${fillPercent}%;"></div>
@@ -418,9 +434,11 @@ function renderWeekCalendar() {
   if (titleEl) titleEl.textContent = formatDayHeader(appState.selectedDate);
 }
 
+// Date selection with smooth refresh animation
 window.selectDate = function(isoStr) {
   appState.selectedDate = new Date(isoStr);
   sounds.playTapSound();
+  animateScheduleRefresh();
   renderApp();
 };
 
@@ -429,6 +447,7 @@ window.navigateDay = function(direction) {
   d.setDate(d.getDate() + direction);
   appState.selectedDate = d;
   sounds.playTapSound();
+  animateScheduleRefresh();
   renderApp();
 };
 
@@ -437,8 +456,18 @@ window.onDatePicked = function(val) {
   const [y, m, d] = val.split('-').map(Number);
   appState.selectedDate = new Date(y, m - 1, d);
   sounds.playTapSound();
+  animateScheduleRefresh();
   renderApp();
 };
+
+function animateScheduleRefresh() {
+  const col = document.querySelector('.schedule-column-transition');
+  if (col) {
+    col.classList.remove('animate-date-refresh');
+    void col.offsetWidth; // trigger reflow
+    col.classList.add('animate-date-refresh');
+  }
+}
 
 // --- Render Main Schedule View ---
 function renderScheduleView() {
@@ -487,7 +516,6 @@ function renderScheduleView() {
       }
     });
 
-    // Upcoming Doses (e.g. 12:00 PM Calcium in Screenshot 3)
     if (!allTakenOrSkipped) {
       slot.meds.forEach(med => {
         const doseId = `${med.id}_${slot.time}`;
@@ -512,7 +540,6 @@ function renderScheduleView() {
       });
     }
 
-    // Logged Doses (e.g. 8:00 AM in Screenshot 3 - Clean and Elegant)
     if (anyRecorded) {
       loggedHtml += `
         <div class="ios-card p-4 mb-3 ios-touch cursor-pointer hover:border-gray-300 transition-all" onclick="openRecordedSheet('${slot.time}')">
@@ -531,7 +558,7 @@ function renderScheduleView() {
               const isTaken = log.status === 'taken';
               return `
                 <div class="flex items-center space-x-3">
-                  <div class="w-5 h-5 rounded-full ${isTaken ? 'bg-[#00C7BE]' : 'bg-[#8E8E93]'} text-white flex items-center justify-center flex-shrink-0">
+                  <div class="w-5 h-5 rounded-full ${isTaken ? 'bg-[#00C7BE] animate-pop-check' : 'bg-[#8E8E93]'} text-white flex items-center justify-center flex-shrink-0">
                     <span class="material-symbols-rounded text-[13px] font-bold">${isTaken ? 'check' : 'close'}</span>
                   </div>
                   <span class="text-[16px] font-medium ${isTaken ? 'text-[#1C1C1E]' : 'line-through text-[#8E8E93]'}">${med.name}</span>
@@ -544,7 +571,6 @@ function renderScheduleView() {
     }
   });
 
-  // As Needed Card (Screenshot 3)
   const asNeededCard = `
     <div class="ios-card-blue p-4 flex items-center justify-between mb-3 hover:border-blue-300 transition-all ios-touch cursor-pointer" onclick="openAsNeededSheet()">
       <div class="flex items-center space-x-3.5">
@@ -575,7 +601,6 @@ function renderScheduleView() {
     }
   }
 
-  // Your Medications List (Screenshot 3 & 4)
   let medsCardsHtml = '';
   appState.medications.forEach(med => {
     const scheduleText = med.asNeeded 
@@ -602,7 +627,7 @@ function renderScheduleView() {
   if (yourMedsContainer) yourMedsContainer.innerHTML = medsCardsHtml;
 }
 
-// Quick Log dose
+// Quick Log dose with toast & sound
 window.quickLogDose = function(medId, time, status = 'taken') {
   const dateKey = formatDateKey(appState.selectedDate);
   if (!appState.logs[dateKey]) appState.logs[dateKey] = {};
@@ -615,8 +640,29 @@ window.quickLogDose = function(medId, time, status = 'taken') {
 
   saveLogs();
   sounds.playTakeChime();
+
+  const med = appState.medications.find(m => m.id === medId);
+  showToast(med ? med.name : 'Medication', status === 'taken' ? 'Logged as Taken' : 'Logged as Skipped');
+
   renderApp();
 };
+
+// --- Smooth Modal Close Helper ---
+function dismissModal(modalId, sheetQuery = '> div') {
+  const modal = document.getElementById(modalId);
+  if (!modal || modal.classList.contains('hidden')) return;
+
+  const sheet = modal.querySelector(sheetQuery);
+  if (sheet) sheet.classList.add('sheet-closing');
+  modal.classList.add('backdrop-closing');
+
+  setTimeout(() => {
+    modal.classList.add('hidden');
+    if (sheet) sheet.classList.remove('sheet-closing');
+    modal.classList.remove('backdrop-closing');
+    document.body.classList.remove('overflow-hidden');
+  }, 220);
+}
 
 // --- Recorded At Modal Sheet (Screenshot 2) ---
 window.openRecordedSheet = function(timeKey) {
@@ -695,8 +741,13 @@ window.toggleDoseStatus = function(medId, timeKey, desiredStatus) {
       status: desiredStatus,
       timestamp: new Date().toISOString()
     };
-    if (desiredStatus === 'taken') sounds.playTakeChime();
-    else sounds.playTapSound();
+    if (desiredStatus === 'taken') {
+      sounds.playTakeChime();
+      const med = appState.medications.find(m => m.id === medId);
+      showToast(med ? med.name : 'Medication', 'Logged as Taken');
+    } else {
+      sounds.playTapSound();
+    }
   }
 
   saveLogs();
@@ -705,8 +756,7 @@ window.toggleDoseStatus = function(medId, timeKey, desiredStatus) {
 };
 
 window.closeRecordedSheet = function() {
-  document.getElementById('recorded-sheet-modal').classList.add('hidden');
-  document.body.classList.remove('overflow-hidden');
+  dismissModal('recorded-sheet-modal', '> div');
   renderApp();
 };
 
@@ -723,7 +773,6 @@ window.openReviewDetails = function(medId) {
     : '<div class="text-[14px] text-[#8E8E93] py-2">No scheduled times</div>';
 
   content.innerHTML = `
-    <!-- Top Bar -->
     <div class="flex items-center justify-between px-5 py-3.5 border-b border-[#E5E5EA] sticky top-0 bg-white/95 backdrop-blur-md z-10">
       <button onclick="closeReviewDetails()" class="text-[#007AFF] font-medium flex items-center text-[16px] ios-touch">
         <span class="material-symbols-rounded text-xl mr-0.5">chevron_left</span>
@@ -740,7 +789,6 @@ window.openReviewDetails = function(medId) {
       <h2 class="text-[26px] font-bold text-[#1C1C1E] mb-0.5">${med.name}</h2>
       <p class="text-[15px] text-[#8E8E93] font-normal mb-5">${med.form}, ${med.dosage}</p>
 
-      <!-- Schedule Card -->
       <div class="text-left mb-5">
         <div class="text-[12px] font-medium text-[#8E8E93] uppercase tracking-wider mb-1.5 ml-1">Schedule</div>
         <div class="bg-[#F2F2F7] rounded-[16px] p-4">
@@ -749,7 +797,6 @@ window.openReviewDetails = function(medId) {
         </div>
       </div>
 
-      <!-- Optional Details Card -->
       <div class="text-left mb-6">
         <div class="text-[12px] font-medium text-[#8E8E93] uppercase tracking-wider mb-1.5 ml-1">Optional Details</div>
         <div class="bg-[#F2F2F7] rounded-[16px] p-4 space-y-3">
@@ -784,8 +831,7 @@ window.openReviewDetails = function(medId) {
 };
 
 window.closeReviewDetails = function() {
-  document.getElementById('review-details-modal').classList.add('hidden');
-  document.body.classList.remove('overflow-hidden');
+  dismissModal('review-details-modal', '#review-details-content');
   renderApp();
 };
 
@@ -812,7 +858,6 @@ window.openEditSchedule = function(medId = null) {
   const isCyclical = med?.frequency === 'cyclical';
 
   sheet.innerHTML = `
-    <!-- Top Navigation Bar -->
     <div class="flex items-center justify-between px-5 py-3.5 border-b border-[#E5E5EA] sticky top-0 bg-white/95 backdrop-blur z-10">
       <button onclick="closeEditSchedule()" class="w-8 h-8 rounded-full bg-[#E5E5EA] flex items-center justify-center text-[#1C1C1E] hover:bg-gray-300 transition-all">
         <span class="material-symbols-rounded text-lg">close</span>
@@ -824,8 +869,6 @@ window.openEditSchedule = function(medId = null) {
     </div>
 
     <div class="p-5 space-y-5 max-h-[85vh] overflow-y-auto no-scrollbar max-w-lg mx-auto pb-14">
-      
-      <!-- When will you take this? -->
       <div>
         <div class="text-[13px] font-medium text-[#8E8E93] mb-1.5 ml-1">When will you take this?</div>
         <div class="bg-[#F2F2F7] rounded-[16px] overflow-hidden divide-y divide-[#E5E5EA]">
@@ -846,7 +889,6 @@ window.openEditSchedule = function(medId = null) {
         </div>
       </div>
 
-      <!-- At what time? (Screenshot 1) -->
       <div>
         <div class="text-[13px] font-medium text-[#8E8E93] mb-1.5 ml-1">At what time?</div>
         <div class="bg-[#F2F2F7] rounded-[16px] p-3">
@@ -877,7 +919,6 @@ window.openEditSchedule = function(medId = null) {
         <p class="text-[12px] text-[#8E8E93] mt-2 px-1">If you schedule a time, Health will send you a notification to take your medications.</p>
       </div>
 
-      <!-- What is the cycle? -->
       <div id="cycle-settings-box" class="${isCyclical ? 'block' : 'hidden'}">
         <div class="text-[13px] font-medium text-[#8E8E93] mb-1.5 ml-1">What is the cycle?</div>
         <div class="bg-[#F2F2F7] rounded-[16px] overflow-hidden divide-y divide-[#E5E5EA]">
@@ -897,7 +938,6 @@ window.openEditSchedule = function(medId = null) {
         <div class="text-[12px] text-[#8E8E93] mt-1.5 px-1 font-normal">Next Pause: April 22</div>
       </div>
 
-      <!-- Duration -->
       <div>
         <div class="text-[13px] font-medium text-[#8E8E93] mb-1.5 ml-1">Duration</div>
         <div class="bg-[#F2F2F7] rounded-[16px] p-4">
@@ -914,7 +954,6 @@ window.openEditSchedule = function(medId = null) {
           <button class="mt-2.5 text-[14px] font-medium text-[#007AFF]">Edit</button>
         </div>
       </div>
-
     </div>
   `;
 
@@ -994,8 +1033,7 @@ window.saveScheduleChanges = function() {
 };
 
 window.closeEditSchedule = function() {
-  document.getElementById('edit-schedule-modal').classList.add('hidden');
-  document.body.classList.remove('overflow-hidden');
+  dismissModal('edit-schedule-modal', '#edit-schedule-content');
   if (editingMedId) openReviewDetails(editingMedId);
 };
 
@@ -1044,13 +1082,13 @@ window.logAsNeededDose = function(medId) {
 
   saveLogs();
   sounds.playTakeChime();
+  showToast(med.name, 'PRN Dose Taken');
   closeAsNeededSheet();
   renderApp();
 };
 
 window.closeAsNeededSheet = function() {
-  document.getElementById('as-needed-modal').classList.add('hidden');
-  document.body.classList.remove('overflow-hidden');
+  dismissModal('as-needed-modal', '> div');
 };
 
 // --- Add New Medication ---
@@ -1151,6 +1189,9 @@ window.updateAddMedPreview = function() {
   const previewBox = document.getElementById('new-med-preview-avatar');
   if (previewBox) {
     previewBox.innerHTML = renderPillAvatar(newMedDraft, 'xl');
+    previewBox.classList.remove('animate-pill-morph');
+    void previewBox.offsetWidth;
+    previewBox.classList.add('animate-pill-morph');
   }
 };
 
@@ -1243,15 +1284,15 @@ window.saveNewMedication = function(e) {
   saveMedications();
   closeAddMedicationModal();
   sounds.playTakeChime();
+  showToast(newMed.name, 'Added to Medications', 'add_circle');
   renderApp();
 };
 
 window.closeAddMedicationModal = function() {
-  document.getElementById('add-med-modal').classList.add('hidden');
-  document.body.classList.remove('overflow-hidden');
+  dismissModal('add-med-modal', '> div');
 };
 
-// --- Tab Switching ---
+// --- Smooth Page Transition Tab Switching ---
 window.switchTab = function(tabName) {
   appState.activeTab = tabName;
   sounds.playTapSound();
@@ -1284,8 +1325,14 @@ window.switchTab = function(tabName) {
     }
 
     if (view) {
-      if (isActive) view.classList.remove('hidden');
-      else view.classList.add('hidden');
+      if (isActive) {
+        view.classList.remove('hidden');
+        view.classList.remove('tab-view-page');
+        void view.offsetWidth; // trigger reflow
+        view.classList.add('tab-view-page');
+      } else {
+        view.classList.add('hidden');
+      }
     }
   });
 
@@ -1332,7 +1379,6 @@ function renderSummaryStats() {
       <p class="text-[14px] text-[#8E8E93] mt-2 font-normal">You've logged ${takenDosesPast7Days} of ${totalDosesPast7Days} scheduled doses this week.</p>
     </div>
 
-    <!-- Weekly Adherence Breakdown -->
     <div class="ios-card p-6 mb-5">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-[18px] font-semibold text-[#1C1C1E]">Daily Consistency</h3>
@@ -1346,7 +1392,7 @@ function renderSummaryStats() {
           return `
             <div class="flex flex-col items-center flex-1 h-full justify-end group">
               <div class="w-7 bg-[#F2F2F7] rounded-full flex flex-col justify-end overflow-hidden h-24">
-                <div class="w-full ${barColor} rounded-full transition-all duration-300" style="height: ${heightPercent}%;"></div>
+                <div class="w-full ${barColor} rounded-full transition-all duration-500" style="height: ${heightPercent}%;"></div>
               </div>
               <span class="text-[12px] font-medium text-[#8E8E93] mt-2">${d.dayName}</span>
             </div>
@@ -1355,7 +1401,6 @@ function renderSummaryStats() {
       </div>
     </div>
 
-    <!-- Cabinet Tracker -->
     <div class="ios-card p-6">
       <div class="flex items-center justify-between mb-3.5">
         <h3 class="text-[18px] font-semibold text-[#1C1C1E]">Cabinet Supply</h3>
@@ -1451,6 +1496,7 @@ window.resetToSampleData = function() {
     localStorage.clear();
     loadData();
     renderApp();
+    showToast('Reset Complete', 'Default Sample Data Restored', 'refresh');
   }
 };
 

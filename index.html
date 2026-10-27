@@ -47,7 +47,18 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="manifest" href="manifest.json">
 </head>
-<body class="bg-[#F2F2F7] text-[#1C1C1E] min-h-screen flex flex-col font-sans">
+<body class="bg-[#F2F2F7] text-[#1C1C1E] min-h-screen flex flex-col font-sans relative overflow-x-hidden">
+
+  <!-- ================= FLOATING CELEBRATION TOAST PILL ================= -->
+  <aside aria-label="Status Notification" id="ios-toast-pill" class="fixed top-4 left-1/2 z-50 px-4 py-2.5 rounded-full ios-glass border border-white/60 shadow-[0_8px_25px_rgba(0,0,0,0.12)] flex items-center space-x-2.5">
+    <div class="w-6 h-6 rounded-full bg-[#00C7BE] text-white flex items-center justify-center flex-shrink-0">
+      <span class="material-symbols-rounded text-sm font-bold toast-icon">check</span>
+    </div>
+    <div class="flex items-baseline space-x-1.5">
+      <span class="text-[14px] font-semibold text-[#1C1C1E] toast-text">Recorded</span>
+      <span class="text-[12px] text-[#8E8E93] toast-sub"></span>
+    </div>
+  </aside>
 
   <!-- ================= TOP APP NAVBAR ================= -->
   <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-[#E5E5EA]/70">
@@ -111,7 +122,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         
         <!-- Left Column: Scheduled Doses (Log + Logged) -->
-        <div class="lg:col-span-7 space-y-5">
+        <div class="lg:col-span-7 space-y-5 schedule-column-transition">
           
           <!-- Section: "Log" (Upcoming / Untaken Doses) -->
           <div>
@@ -179,17 +190,17 @@
   <nav aria-label="Mobile Navigation" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-40 w-[88%] max-w-[340px] md:hidden">
     <div class="ios-glass rounded-full px-5 py-2 flex items-center justify-around shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/60">
       
-      <button id="tab-btn-summary" onclick="switchTab('summary')" class="flex flex-col items-center text-[#8E8E93] hover:text-[#007AFF] transition-all ios-touch py-0.5">
+      <button id="tab-btn-summary" onclick="switchTab('summary')" class="tab-spring flex flex-col items-center text-[#8E8E93] hover:text-[#007AFF] transition-all ios-touch py-0.5">
         <span class="material-symbols-rounded text-[22px]">favorite</span>
         <span class="text-[10px] font-medium mt-0.5">Summary</span>
       </button>
 
-      <button id="tab-btn-sharing" onclick="switchTab('sharing')" class="flex flex-col items-center text-[#8E8E93] hover:text-[#007AFF] transition-all ios-touch py-0.5">
+      <button id="tab-btn-sharing" onclick="switchTab('sharing')" class="tab-spring flex flex-col items-center text-[#8E8E93] hover:text-[#007AFF] transition-all ios-touch py-0.5">
         <span class="material-symbols-rounded text-[22px]">group</span>
         <span class="text-[10px] font-medium mt-0.5">Sharing</span>
       </button>
 
-      <button id="tab-btn-browse_meds" onclick="switchTab('browse_meds')" class="flex flex-col items-center text-[#007AFF] font-semibold hover:text-[#0066D6] transition-all ios-touch py-0.5">
+      <button id="tab-btn-browse_meds" onclick="switchTab('browse_meds')" class="tab-spring flex flex-col items-center text-[#007AFF] font-semibold hover:text-[#0066D6] transition-all ios-touch py-0.5">
         <span class="material-symbols-rounded text-[22px]">apps</span>
         <span class="text-[10px] font-medium mt-0.5">Browse</span>
       </button>
