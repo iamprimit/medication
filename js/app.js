@@ -629,28 +629,28 @@ window.openRecordedSheet = function(timeKey) {
     const isSkipped = curStatus === 'skipped';
 
     return `
-      <div class="ios-card p-4.5 mb-3.5 transition-all">
-        <div class="flex items-center space-x-3.5 mb-3">
-          ${renderPillAvatar(med, 'lg')}
-          <div>
-            <div class="text-[18px] font-semibold text-[#1C1C1E] leading-snug">${med.name}</div>
-            <div class="text-[14px] font-normal text-[#8E8E93]">${med.form}, ${med.dosage}</div>
-            <div class="text-[13px] font-medium text-[#007AFF] mt-0.5 flex items-center">
+      <div class="ios-card p-3.5 sm:p-4 mb-3 border border-black/[0.04]">
+        <div class="flex items-center space-x-3 mb-2.5">
+          ${renderPillAvatar(med, 'md')}
+          <div class="flex-1 min-w-0">
+            <div class="text-[16px] font-semibold text-[#1C1C1E] leading-snug truncate">${med.name}</div>
+            <div class="text-[13px] font-normal text-[#8E8E93] truncate">${med.form}, ${med.dosage}</div>
+            <div class="text-[12px] font-medium text-[#007AFF] mt-0.5 flex items-center">
               1 ${med.form.toLowerCase()} at ${timeLabel}
               <span class="material-symbols-rounded text-sm ml-0.5">chevron_right</span>
             </div>
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mt-3.5">
-          <button onclick="toggleDoseStatus('${med.id}', '${timeKey}', 'skipped')" 
-            class="py-3 px-4 rounded-full font-semibold text-[15px] transition-all flex items-center justify-center space-x-1.5 ios-touch ${isSkipped ? 'bg-[#CCE4F8] text-[#007AFF] ring-2 ring-[#007AFF]' : 'bg-[#E5F1FC] text-[#007AFF] hover:bg-[#D5E8FD]'}">
+        <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-[#E5E5EA]/60">
+          <button type="button" onclick="toggleDoseStatus('${med.id}', '${timeKey}', 'skipped')" 
+            class="h-9 px-3 rounded-full font-medium text-[13px] sm:text-[14px] transition-all flex items-center justify-center space-x-1 ios-touch ${isSkipped ? 'bg-[#CCE4F8] text-[#007AFF] font-semibold ring-2 ring-[#007AFF]/60' : 'bg-[#E5F1FC] text-[#007AFF] hover:bg-[#D5E8FD]'}">
             <span>${isSkipped ? '✓ Skipped' : 'Skipped'}</span>
           </button>
           
-          <button onclick="toggleDoseStatus('${med.id}', '${timeKey}', 'taken')" 
-            class="py-3 px-4 rounded-full font-semibold text-[15px] transition-all flex items-center justify-center space-x-1.5 shadow-xs ios-touch ${isTaken ? 'bg-[#007AFF] text-white ring-2 ring-blue-400' : 'bg-[#007AFF] text-white hover:bg-[#0066D6]'}">
-            <span class="material-symbols-rounded text-base">check</span>
+          <button type="button" onclick="toggleDoseStatus('${med.id}', '${timeKey}', 'taken')" 
+            class="h-9 px-3 rounded-full font-medium text-[13px] sm:text-[14px] transition-all flex items-center justify-center space-x-1 shadow-xs ios-touch ${isTaken ? 'bg-[#007AFF] text-white font-semibold ring-2 ring-blue-300' : 'bg-[#007AFF] text-white hover:bg-[#0066D6]'}">
+            <span class="material-symbols-rounded text-[16px]">check</span>
             <span>Taken</span>
           </button>
         </div>
@@ -678,11 +678,8 @@ window.toggleDoseStatus = function(medId, timeKey, desiredStatus) {
       timestamp: new Date().toISOString()
     };
     if (desiredStatus === 'taken') {
-      sounds.playTakeChime();
       const med = appState.medications.find(m => m.id === medId);
       showToast(med ? med.name : 'Medication', 'Logged as Taken');
-    } else {
-      sounds.playTapSound();
     }
   }
 
@@ -691,8 +688,16 @@ window.toggleDoseStatus = function(medId, timeKey, desiredStatus) {
   renderWeekCalendar();
 };
 
-window.closeRecordedSheet = function() {
-  dismissModal('recorded-sheet-modal');
+window.closeRecordedSheet = function(e) {
+  if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+  const modal = document.getElementById('recorded-sheet-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('backdrop-closing');
+    const sheet = modal.firstElementChild;
+    if (sheet) sheet.classList.remove('sheet-closing');
+  }
+  document.body.classList.remove('overflow-hidden');
   renderApp();
 };
 

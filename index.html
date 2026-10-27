@@ -50,15 +50,12 @@
 </head>
 <body class="bg-[#F2F2F7] text-[#1C1C1E] min-h-screen flex flex-col font-sans relative overflow-x-hidden">
 
-  <!-- ================= FLOATING CELEBRATION TOAST PILL ================= -->
-  <aside aria-label="Status Notification" id="ios-toast-pill" class="fixed top-4 left-1/2 z-50 px-4 py-2.5 rounded-full ios-glass border border-white/60 shadow-[0_8px_25px_rgba(0,0,0,0.12)] flex items-center space-x-2.5">
-    <div class="w-6 h-6 rounded-full bg-[#00C7BE] text-white flex items-center justify-center flex-shrink-0">
-      <span class="material-symbols-rounded text-sm font-bold toast-icon">check</span>
+  <!-- ================= FLOATING ACTION TOAST PILL ================= -->
+  <aside aria-label="Status Notification" id="ios-toast-pill" class="fixed bottom-20 md:bottom-8 left-1/2 transform -translate-x-1/2 translate-y-6 opacity-0 pointer-events-none z-50 px-4 py-2 rounded-full bg-[#1C1C1E]/95 text-white shadow-[0_10px_30px_rgba(0,0,0,0.3)] backdrop-blur-md flex items-center space-x-2 transition-all duration-300">
+    <div class="w-5 h-5 rounded-full bg-[#00C7BE] text-white flex items-center justify-center flex-shrink-0">
+      <span class="material-symbols-rounded text-[13px] font-bold toast-icon">check</span>
     </div>
-    <div class="flex items-baseline space-x-1.5">
-      <span class="text-[14px] font-semibold text-[#1C1C1E] toast-text">Recorded</span>
-      <span class="text-[12px] text-[#8E8E93] toast-sub"></span>
-    </div>
+    <span class="text-[13px] font-medium text-white whitespace-nowrap toast-text">Aspirin logged as taken</span>
   </aside>
 
   <!-- ================= TOP APP NAVBAR ================= -->
@@ -208,7 +205,7 @@
     <div class="w-full max-w-md bg-[#F2F2F7] rounded-t-[28px] sm:rounded-3xl max-h-[90vh] flex flex-col overflow-hidden animate-slide-up shadow-xl border border-white/40">
       
       <div class="px-5 py-3.5 flex items-center justify-between border-b border-[#E5E5EA] bg-white">
-        <button onclick="closeRecordedSheet()" class="w-8 h-8 rounded-full bg-[#F2F2F7] hover:bg-gray-200 text-[#1C1C1E] flex items-center justify-center transition-all">
+        <button type="button" onclick="closeRecordedSheet(event)" class="w-8 h-8 rounded-full bg-[#F2F2F7] hover:bg-gray-200 text-[#1C1C1E] flex items-center justify-center transition-all cursor-pointer" aria-label="Close">
           <span class="material-symbols-rounded text-lg">close</span>
         </button>
         <div id="recorded-sheet-date" class="text-[15px] font-semibold text-[#1C1C1E]">Wednesday, Apr 1</div>
@@ -229,7 +226,7 @@
           <!-- Populated by JS -->
         </div>
 
-        <button onclick="closeRecordedSheet()" class="w-full py-3.5 rounded-full bg-[#E5E5EA] hover:bg-gray-300 text-[#1C1C1E] font-semibold text-[16px] active:scale-98 transition-all mt-3">
+        <button type="button" onclick="closeRecordedSheet(event)" class="w-full h-11 rounded-full bg-[#E5E5EA] hover:bg-gray-300 text-[#1C1C1E] font-semibold text-[15px] active:scale-98 transition-all mt-3 cursor-pointer">
           Done
         </button>
       </div>
