@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -118,43 +119,35 @@
         </div>
       </div>
 
-      <!-- Responsive Two-Column Layout (Mobile: single column | Desktop: 2 columns) -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+      <!-- Single Unified Stream Layout (Screenshots 3 & 4) -->
+      <div class="space-y-5 schedule-column-transition">
         
-        <!-- Left Column: Scheduled Doses (Log + Logged) -->
-        <div class="lg:col-span-7 space-y-5 schedule-column-transition">
-          
-          <!-- Section: "Log" (Upcoming / Untaken Doses) -->
-          <div>
-            <h2 class="text-[20px] font-bold text-[#1C1C1E] tracking-tight mb-2.5">Log</h2>
-            <div id="log-upcoming-section">
-              <!-- Dynamically populated (e.g. 12:00 PM Calcium + As Needed card) -->
-            </div>
+        <!-- Section: "Log" (Upcoming / Untaken Doses) -->
+        <div>
+          <h2 class="text-[20px] font-bold text-[#1C1C1E] tracking-tight mb-2.5">Log</h2>
+          <div id="log-upcoming-section">
+            <!-- Dynamically populated (e.g. 12:00 PM Calcium + As Needed card) -->
           </div>
-
-          <!-- Section: "Logged" (Recorded Doses) -->
-          <div id="logged-section" style="display: none;">
-            <h2 class="text-[20px] font-bold text-[#1C1C1E] tracking-tight mb-2.5">Logged</h2>
-            <div id="logged-list">
-              <!-- Dynamically populated with completed doses -->
-            </div>
-          </div>
-
         </div>
 
-        <!-- Right Column: Your Medications / Cabinet -->
-        <div class="lg:col-span-5 space-y-5">
-          <div>
-            <div class="flex items-center justify-between mb-2.5">
-              <h2 class="text-[20px] font-bold text-[#1C1C1E] tracking-tight">Your Medications</h2>
-              <button onclick="openAddMedicationModal()" class="text-[15px] font-medium text-[#007AFF] hover:underline">
-                Edit
-              </button>
-            </div>
-            
-            <div id="your-meds-list">
-              <!-- Dynamically populated list of medication cards -->
-            </div>
+        <!-- Section: "Logged" (Recorded Doses) -->
+        <div id="logged-section" style="display: none;">
+          <h2 class="text-[20px] font-bold text-[#1C1C1E] tracking-tight mb-2.5">Logged</h2>
+          <div id="logged-list">
+            <!-- Dynamically populated with completed doses -->
+          </div>
+        </div>
+
+        <!-- Section: "Your Medications" -->
+        <div>
+          <div class="flex items-center justify-between mb-2.5">
+            <h2 class="text-[20px] font-bold text-[#1C1C1E] tracking-tight">Your Medications</h2>
+            <button onclick="openAddMedicationModal()" class="text-[15px] font-medium text-[#007AFF] hover:underline">
+              Edit
+            </button>
+          </div>
+          <div id="your-meds-list">
+            <!-- Dynamically populated list of medication cards -->
           </div>
         </div>
 
