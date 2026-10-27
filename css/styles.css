@@ -1,0 +1,312 @@
+/* Medication Reminder - Apple Health & Material 3 Hybrid Stylesheet */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+:root {
+  --ios-bg: #F2F2F7;
+  --ios-card: #FFFFFF;
+  --ios-blue: #007AFF;
+  --ios-blue-hover: #0062cc;
+  --ios-blue-light: #EBF4FF;
+  --ios-cyan: #00C7BE;
+  --ios-green: #34C759;
+  --ios-red: #FF3B30;
+  --ios-orange: #FF9500;
+  --ios-yellow: #FFCC00;
+  --ios-purple: #AF52DE;
+  --ios-pink: #FF2D55;
+  --ios-gray-text: #8E8E93;
+  --ios-gray-light: #F2F2F7;
+  --ios-border: #E5E5EA;
+  --ios-separator: rgba(60, 60, 67, 0.12);
+  --font-main: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: #0f172a; /* Desktop dark backdrop to contrast the device frame */
+  color: #1c1c1e;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Material Symbols Rounded adjustments */
+.material-symbols-rounded {
+  font-family: 'Material Symbols Rounded';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+}
+
+.material-symbols-rounded.outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 450, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Smooth Scrolling & Hide scrollbars for app-like experience */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Apple iOS Frosted Glass & Blur */
+.ios-glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+}
+
+.ios-glass-dark {
+  background: rgba(30, 30, 30, 0.75);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+}
+
+.ios-glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Realistic 3D Pill Renderings */
+.pill-avatar-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pill-avatar-container:hover {
+  transform: scale(1.05);
+}
+
+/* 3D Round Tablet */
+.tablet-3d {
+  position: relative;
+  border-radius: 50%;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.18),
+    inset 0 2px 3px rgba(255, 255, 255, 0.8),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tablet-3d::after {
+  content: '';
+  position: absolute;
+  width: 75%;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  border-radius: 1px;
+}
+
+/* 3D Oblong Capsule */
+.capsule-3d {
+  position: relative;
+  border-radius: 9999px;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 10px rgba(0, 0, 0, 0.18),
+    inset 0 2px 2px rgba(255, 255, 255, 0.65),
+    inset 0 -2px 2px rgba(0, 0, 0, 0.2);
+  display: flex;
+}
+
+.capsule-half-left, .capsule-half-right {
+  flex: 1;
+  height: 100%;
+}
+
+.capsule-sheen {
+  position: absolute;
+  top: 15%;
+  left: 10%;
+  width: 80%;
+  height: 30%;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+}
+
+/* 3D Oval Caplet */
+.caplet-3d {
+  position: relative;
+  border-radius: 9999px;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    inset 0 2px 4px rgba(255, 255, 255, 0.7),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.2);
+}
+
+.caplet-3d::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 20%;
+  right: 20%;
+  height: 1.5px;
+  background: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Bottom Sheet / Modal Spring Animations */
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulsePill {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+.animate-pop-in {
+  animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse-pill {
+  animation: pulsePill 0.6s ease-in-out;
+}
+
+/* iOS Grouped Row Separator */
+.ios-row {
+  position: relative;
+}
+.ios-row:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 16px;
+  height: 1px;
+  background-color: var(--ios-separator);
+}
+
+/* Calendar Day Adherence Dot */
+.day-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.day-dot.empty {
+  background: #E5E5EA;
+}
+
+.day-dot.partial {
+  background: linear-gradient(180deg, var(--ios-cyan) 50%, #E5E5EA 50%);
+}
+
+.day-dot.full {
+  background: var(--ios-cyan);
+}
+
+.day-dot.future {
+  background: #EBEBF0;
+  opacity: 0.7;
+}
+
+/* Dynamic Island Animation */
+.dynamic-island {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.dynamic-island.expanded {
+  width: 90% !important;
+  height: 60px !important;
+  border-radius: 28px !important;
+}
+
+/* Active touch feedback */
+.ios-touch:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+/* Native Mobile View (when viewport is small) vs Desktop Bezel */
+@media (max-width: 640px) {
+  body {
+    background-color: var(--ios-bg);
+  }
+  #device-container {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  #notch-bezel {
+    display: none !important;
+  }
+  #app-viewport {
+    border-radius: 0 !important;
+  }
+  #view-mode-toggle {
+    display: none !important;
+  }
+}
